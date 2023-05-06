@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="换源加快PVE更新&amp;#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性">
+  
+
+  
+  
+  <meta name="keywords" content="PVE,N5105">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-05-06T17:10:39.000Z">
+          2023-05-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性</p>
+<span id="more"></span>
+
+<h1 id="一-N5105机器自身问题带来的噩梦"><a href="#一-N5105机器自身问题带来的噩梦" class="headerlink" title="一.N5105机器自身问题带来的噩梦"></a>一.N5105机器自身问题带来的噩梦</h1><p>我手上有两台N5105工控机，一台是康耐信的，一台是畅网的。</p>
+<p>前者用来跑虚拟化，简直是噩梦，后者裸机单跑<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt">CatWrt</a>(OpenWrt)，两台设备都是<strong>第一版</strong>N5105设备。如果你不使用虚拟化技术，那么本文对你参考意义不大。</p>
+<p>说说我2022年10月左右玩虚拟化遇到的问题吧</p>
+<p>1.Windows Server 2022：网卡直通失败</p>
+<p>2.PVE异常</p>
+<p>后来，实在忍受不了N5105的虚拟化问题，在网上看到大家都抱怨N5105虚拟化稳定性后，我选择了单跑了近半年的OpenWrt。直至看了网友们说的，新版本固件软件都优化了，遂于五一节重新搞起了虚拟化，确实坑变少了许多。最核心的解决方案还是更换硬件，如果不能更换，那用软件精修一下毛坯房也不是不行(</p>
+<h2 id="N5105虚拟化的问题"><a href="#N5105虚拟化的问题" class="headerlink" title="N5105虚拟化的问题"></a>N5105虚拟化的问题</h2><p>看了网上很多关于IntelN5105虚拟化踩坑的帖子，无外乎就是这两点：</p>
+<p><strong>虚拟机死机，PCIe设备直通失败</strong></p>
+<p>目前给出的回复大致都是这样的</p>
+<p>第一版N5105工控机存在缺陷（他们往往配置的都是i225-v3网卡，CPU步进0x0），如果是第一代，还是放弃直通吧，真没办法(</p>
+<blockquote>
+<p>问题列表：</p>
+<p>1.虚拟机频繁死机，重启</p>
+<p>2.Host死机，未响应</p>
+<p>3.网卡直通错乱（i226一般没这个问题）</p>
+<p>4.无网络</p>
+<p>5.管理页面打不开</p>
+<p>6.虚拟机无法重启，只能关闭PVE重新启动设备。</p>
+</blockquote>
+<p>在没有更新系统前，我的OpenWrt虚拟机一天死机一次，网心云x86几个小时就死机一次，更新后两者都已经稳定运行两天多了（5-5到5-7）</p>
+<p><img src="/../images/5.png" alt="CatWrt稳定运行"></p>
+<p>第三版及之后的，由于使用了更新的BIOS固件，更新的CPU，以及改善的i226，解决了很多问题。据chiphell论坛网友们的评论，基本上解决了N5105虚拟化死机和直通异常的问题。</p>
+<h2 id="查看自己的硬件在不在天坑里"><a href="#查看自己的硬件在不在天坑里" class="headerlink" title="查看自己的硬件在不在天坑里"></a>查看自己的硬件在不在天坑里</h2><p>最简单的，在你购买的渠道询问：这是第几版的N5105工控机 如果卖家回答你：第一版的 </p>
+<p>那么，恭喜你！中奖了 ！早期天坑版本。</p>
+<p>或者是查看商品信息，一般会写着网卡型号：如果是i255，一般是第一版的；i226一般是较新的，但不好判断，主要还是得手动查看</p>
+<p>在Linux终端里输入如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep stepping</span><br></pre></td></tr></table></figure>
+
+<p>如果输出的有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stepping        : 0</span><br></pre></td></tr></table></figure>
+
+<p>那么，恭喜你！中奖了 ！早期天坑版本。</p>
+<p>天坑们往往会携带着又一天坑网卡：<strong>I225-V (rev 03)</strong></p>
+<p>在Linux终端里输入如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lspci | grep <span class="string">&quot;Ethernet controller&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果输出的有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">03:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">04:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">05:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">06:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br></pre></td></tr></table></figure>
+
+<p>那么，恭喜你！中奖了 ！该网卡不适合虚拟机直通，不过，可以通过创建网桥&#x2F;半虚拟化方式来使用。</p>
+<p>（曲线救国方案：不支持模拟mac设备，不能修改mac地址，不支持在系统内创建桥接）</p>
+<h1 id="二-更新PVE以填部分坑"><a href="#二-更新PVE以填部分坑" class="headerlink" title="二.更新PVE以填部分坑"></a>二.更新PVE以填部分坑</h1><p><strong>PVE 是什么</strong></p>
+<p>据 PVE 的<a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Main_Page">官网介绍</a>，PVE 是Proxmox Virtual Environment 的缩写， 是一个完整的开源服务器管理平台，用于企业虚拟化。它将 KVM 管理程序和 Linux 容器 (LXC)、软件定义的存储和网络功能紧密集成在一个平台上。借助基于 Web 的集成用户界面，您可以轻松管理 VM 和容器、集群的高可用性或集成的灾难恢复工具。</p>
+<p>它是基于Debian11的系统，因此，所有的包管理操作同Debian一致，可玩性也十分强大。</p>
+<p><img src="https://pve.proxmox.com/mediawiki/images/thumb/a/a3/Proxmox-VE-Cluster-Summary.png/800px-Proxmox-VE-Cluster-Summary.png" alt="File:Proxmox-VE-Cluster-Summary.png"></p>
+<p><strong>PVE下载与安装：</strong></p>
+<p>网上教程较多，本文不再赘述</p>
+<p>在新版的PVE内核中（推荐5.17+），优化了N5105的整体稳定性和核显稳定性，更好用了。</p>
+<h2 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h2><h3 id="一、更换阿里云的源"><a href="#一、更换阿里云的源" class="headerlink" title="一、更换阿里云的源"></a>一、更换阿里云的源</h3><p>在终端中输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+<p>将里面的内容全部替换为：（换成其它源也可以）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye main non-free contrib`</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye main non-free contrib</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian-security/ bullseye-security main</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian-security/ bullseye-security main</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、去除企业版源并增加社区源"><a href="#二、去除企业版源并增加社区源" class="headerlink" title="二、去除企业版源并增加社区源"></a>二、去除企业版源并增加社区源</h3><p>在终端中输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/apt/sources.list.d</span><br><span class="line">vi pve-enterprise.list</span><br></pre></td></tr></table></figure>
+
+<p>注释掉：（增加#号）</p>
+<p>找到对应行，输入i，然后注释</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#deb https://enterprise.proxmox.com/debian/pve buster pve-enterprise</span><br></pre></td></tr></table></figure>
+
+<p>按ESC -&gt; :wq 退出</p>
+<p>接着：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> pve-no-subscription.list</span><br><span class="line">vi pve-no-subscription.list</span><br></pre></td></tr></table></figure>
+
+<p>然后输入i -&gt;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/proxmox/debian/pve bullseye pve-no-subscription</span><br></pre></td></tr></table></figure>
+
+<p>ESC -&gt; :wq 退出</p>
+<h3 id="三、清理、更新系统"><a href="#三、清理、更新系统" class="headerlink" title="三、清理、更新系统"></a>三、清理、更新系统</h3><p>使用下面命令清理系统冗余并更新软件包列表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt clean </span><br><span class="line">apt autoclean </span><br><span class="line">apt autoremove --purge</span><br><span class="line">apt update</span><br></pre></td></tr></table></figure>
+
+<p>注释掉5.15内核，否则在全部更新的时候会更新5.15版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-mark hold pve-kernel-5.15</span><br></pre></td></tr></table></figure>
+
+<p>安装最新内核及更新系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install pve-kernel-6.2.11-1-pve -y</span><br><span class="line"><span class="comment">#截至当前发文，最新版本内核已经更新到6.2.11了，而我的是两天前安装的6.2.9</span></span><br><span class="line">apt dist-upgrade -y</span><br></pre></td></tr></table></figure>
+
+<p>安装&#x2F;更新Intel微码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install intel-microcode -y</span><br></pre></td></tr></table></figure>
+
+<p>接着输入reboot命令重启系统等待微码更新和内核启动即可。</p>
+<p>重启后使用uname -a查看内核信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# uname -a</span><br><span class="line">Linux pve 6.2.9-1-pve #1 SMP PREEMPT_DYNAMIC PVE 6.2.9-1 (2023-03-31T10:48Z) x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、PVE虚拟机注意事项（对于第一版）"><a href="#三、PVE虚拟机注意事项（对于第一版）" class="headerlink" title="三、PVE虚拟机注意事项（对于第一版）"></a>三、PVE虚拟机注意事项（对于第一版）</h1><p>本段是根据个人所遇到的情况及相应的处理方案，不一定适用于每个人。</p>
+<p>由于我购置的康耐信N5105 r86s工控机是四网口的，可以通过单独为PVE准备一个WAN口解决PVE内无法上网的问题，还可以为此创建docker的macvlan网络。双网口可以参考双网口的文章。</p>
+<h2 id="个人网络情况"><a href="#个人网络情况" class="headerlink" title="个人网络情况"></a>个人网络情况</h2><p><img src="/../images/1.png" alt="image-20230506234046359"></p>
+<p>网口1 enp3s0：接上游网络设备(光猫拨号设备&#x2F;另一个网关)  <em><strong>已创建桥接</strong></em>（相当于虚拟机的WAN）</p>
+<p>网口2 enp4s0：接路由器（AP及下游网络设备）<em><strong>已创建桥接</strong></em> （为虚拟化路由器系统（<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt">CatWrt</a>）准备的LAN）</p>
+<p>网口3 enp5s0：接上游网络设备（用于做管理口和PVE上网的网口 相当于PVE的WAN）</p>
+<p>网口4  闲置</p>
+<h2 id="1-使用半虚拟化代替硬件直通"><a href="#1-使用半虚拟化代替硬件直通" class="headerlink" title="1.使用半虚拟化代替硬件直通"></a>1.使用半虚拟化代替硬件直通</h2><p>由于第一版N5105及其i225网卡的缺陷，直通将可能导致虚拟机内掉网卡，掉速和拔插网线死机，虚拟机外（Host）网口错乱等问题，故不宜选用此方案。</p>
+<p>但我们总得解决设备的网卡需求，因此，我们选用半虚拟化方案。</p>
+<p>首先，在数据中心-&gt;pve-&gt;系统-&gt;网络-&gt;创建-&gt;Linux Bridge</p>
+<p>我为我的网络创建了两个bridge，分别对应WAN(vmbr0,enp3s0)和LAN(vmbr1,enp4s0)</p>
+<p><img src="/../images/2.png" alt="image-20230506235614503"></p>
+<p>名称填自己喜欢的，桥接端口自己选择网口，<strong>勾选自动启动</strong></p>
+<p>注意：<strong>在创建完网络设备和设置网关等信息后需要点击应用配置以使设置生效</strong></p>
+<p>在虚拟机上，添加网络设备</p>
+<p><img src="/../images/3.png" alt="image-20230507000430199"></p>
+<p>选择自己刚刚添加的设备，模型选择  <strong>VirtIO(半虚拟化)</strong>  <strong>这对稳定性非常重要！</strong></p>
+<p>防火墙选项：如果没有在PVE下管理流量的需求，可以不勾选。</p>
+<h2 id="2-为PVE配置一个单独的WAN口"><a href="#2-为PVE配置一个单独的WAN口" class="headerlink" title="2.为PVE配置一个单独的WAN口"></a>2.为PVE配置一个单独的WAN口</h2><p>为什么需要为PVE单独创建一个WAN口而不复用vmbr0呢？</p>
+<h3 id="问题1：PVE无法上网"><a href="#问题1：PVE无法上网" class="headerlink" title="问题1：PVE无法上网"></a>问题1：PVE无法上网</h3><p>如果在没有创建使用vmbr0的虚拟机前，当然是没有问题的，但当我们创建虚拟机后，就会遇到同网上一样的问题：</p>
+<blockquote>
+<p>PVE Host无法上网：网关，IP设置正确也无效</p>
+</blockquote>
+<p>如果PVE_WAN复用的是LAN（OpenWrt的LAN）</p>
+<blockquote>
+<p>有可能出现以下两种错误：</p>
+<p>1 Temporary failure in name resolution</p>
+<p>直接报dns的错误</p>
+<p>2 failed: Network is unreachable 或Destination Host Unreachable</p>
+</blockquote>
+<p>参考CSDN文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/IcarusAegis/article/details/125823095">Here</a></p>
+<p>如果PVE_WAN复用的是WAN（vmbr0）,参考下文。</p>
+<h3 id="问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）"><a href="#问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）" class="headerlink" title="问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）"></a>问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）</h3><blockquote>
+<p>vmbr0，vmbr1 对应enp3s0,enp4s0</p>
+</blockquote>
+<p>假如需要创建多个虚拟WAN，那么在如上（vmbr0，vmbr1 ，enp3s0,enp4s0）设备无法创建虚拟的VLAN设备以达到桥接创建虚拟网口的目的，包括docker的macvlan，当我们指定这些网络设备时会提示设备繁忙。</p>
+<p>比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create -d macvlan --subnet=192.168.31.0/24 --gateway=192.168.31.1 -o parent=enp3s0 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>会提示设备繁忙无法创建（或者创建成功，但我们在添加容器时提示繁忙）。</p>
+<h3 id="创建WAN的方法："><a href="#创建WAN的方法：" class="headerlink" title="创建WAN的方法："></a>创建WAN的方法：</h3><p>有两种途径创建WAN。</p>
+<h4 id="1-使用PVE的Web图形化页面创建WAN口"><a href="#1-使用PVE的Web图形化页面创建WAN口" class="headerlink" title="1.使用PVE的Web图形化页面创建WAN口"></a>1.使用PVE的Web图形化页面创建WAN口</h4><p>在数据中心-&gt;pve-&gt;系统-&gt;网络，选择一个未桥接的接口，设置静态IP信息。（网关，IP地址，子网长度）</p>
+<p><img src="/../images/4.png" alt="image-20230507002048100"></p>
+<p>然后点击<strong>应用配置</strong></p>
+<h4 id="2-在终端中配置（推荐动手能力高的）"><a href="#2-在终端中配置（推荐动手能力高的）" class="headerlink" title="2.在终端中配置（推荐动手能力高的）"></a>2.在终端中配置（推荐动手能力高的）</h4><p>输入命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/network/interfaces</span><br></pre></td></tr></table></figure>
+
+<p>手动配置网卡信息。</p>
+<p>在enp5s0区段下修改如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">auto enp5s0</span><br><span class="line">iface enp5s0 inet static</span><br><span class="line">        address 192.168.31.41/24</span><br><span class="line">        gateway 192.168.31.1</span><br></pre></td></tr></table></figure>
+
+<p>重启网络</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service networking restart</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置路由、DNS信息"><a href="#配置路由、DNS信息" class="headerlink" title="配置路由、DNS信息"></a>配置路由、DNS信息</h3><p>如果不执行这一步，你会发现PVE已经出现在了192.168.31.1&#x2F;24网段了，即已经连接上路由器了，但依然无法访问外网。这是因为路由信息异常导致的，需要单独设置默认网卡和默认路由。</p>
+<p>设置enp5s0为默认路由</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ip route add default via 192.168.100.1 dev enp5s50</span><br><span class="line"><span class="comment">#或</span></span><br><span class="line">route add default gw 192.168.31.1 enp5s0</span><br></pre></td></tr></table></figure>
+
+<p>查看配置结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route show</span><br></pre></td></tr></table></figure>
+
+<p>如果出现</p>
+<blockquote>
+<p>default via 192.168.31.1 dev enp5s0 proto kernel onlink </p>
+<p>即成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# ip route show</span><br><span class="line">default via 192.168.31.1 dev enp5s0 proto kernel onlink</span><br><span class="line">172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1</span><br><span class="line">192.168.31.0/24 dev enp5s0 proto kernel scope link src 192.168.31.41</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>接着配置dns</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加dns</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">search com</span><br><span class="line">nameserver 192.168.31.1</span><br><span class="line">nameserver 8.8.8.8</span><br></pre></td></tr></table></figure>
+
+<p>有关PVE的IPv6配置将在后续到来。</p>
+<p>测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# curl ip.3322.net</span><br><span class="line">61.180.102.151</span><br></pre></td></tr></table></figure>
+
+<p>成功连接Internet。</p>
+<p>当然，此后，我们可以在enp5s0 直接创建macvlan网络，vlan设备了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# docker network create -d macvlan --subnet=192.168.31.0/24 --gateway=192.168.31.1 -o parent=enp5s0 dianxin</span><br><span class="line">0ebcd6c39b7e812665ba5176c088b715e196923fca1d3f75aef842dc2f1861d0</span><br><span class="line">root@pve:~# docker network ls</span><br><span class="line">NETWORK ID     NAME      DRIVER    SCOPE</span><br><span class="line">c1a286028953   bridge    bridge    local</span><br><span class="line">0ebcd6c39b7e   dianxin   macvlan   local</span><br><span class="line">1babb0e980ee   host      host      local</span><br><span class="line">ecb39f108081   none      null      local</span><br></pre></td></tr></table></figure>
+
+
+
+<p>End.</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PVE/">PVE</a><a href="/tags/N5105/">N5105</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
