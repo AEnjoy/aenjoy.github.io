@@ -10,7 +10,8 @@
   
 
   
-  <meta name="description" content="换源加快PVE更新&amp;#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性">
+  <meta name="description" content="换源加快PVE更新&amp;#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性
+康耐信N5105 0x0步进第一版i225-v3">
   
 
   
@@ -80,14 +81,20 @@
     <div class="entry">
       
         <p>换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性</p>
+<p>康耐信N5105 0x0步进第一版i225-v3 </p>
 <span id="more"></span>
 
+<p>本文阅读约12分钟。</p>
+<p>本文最后更新于2023-5-8 23:26:13 版本v2。</p>
 <h1 id="一-N5105机器自身问题带来的噩梦"><a href="#一-N5105机器自身问题带来的噩梦" class="headerlink" title="一.N5105机器自身问题带来的噩梦"></a>一.N5105机器自身问题带来的噩梦</h1><p>我手上有两台N5105工控机，一台是康耐信的，一台是畅网的。</p>
 <p>前者用来跑虚拟化，简直是噩梦，后者裸机单跑<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt">CatWrt</a>(OpenWrt)，两台设备都是<strong>第一版</strong>N5105设备。如果你不使用虚拟化技术，那么本文对你参考意义不大。</p>
 <p>说说我2022年10月左右玩虚拟化遇到的问题吧</p>
 <p>1.Windows Server 2022：网卡直通失败</p>
 <p>2.PVE异常</p>
 <p>后来，实在忍受不了N5105的虚拟化问题，在网上看到大家都抱怨N5105虚拟化稳定性后，我选择了单跑了近半年的OpenWrt。直至看了网友们说的，新版本固件软件都优化了，遂于五一节重新搞起了虚拟化，确实坑变少了许多。最核心的解决方案还是更换硬件，如果不能更换，那用软件精修一下毛坯房也不是不行(</p>
+<blockquote>
+<p>2023-5-8 23:19:37 更新： 目前所有的虚拟机已经稳定运行四天，PCDN也保持了四天在线的记录。</p>
+</blockquote>
 <h2 id="N5105虚拟化的问题"><a href="#N5105虚拟化的问题" class="headerlink" title="N5105虚拟化的问题"></a>N5105虚拟化的问题</h2><p>看了网上很多关于IntelN5105虚拟化踩坑的帖子，无外乎就是这两点：</p>
 <p><strong>虚拟机死机，PCIe设备直通失败</strong></p>
 <p>目前给出的回复大致都是这样的</p>
@@ -106,7 +113,8 @@
 <p>第三版及之后的，由于使用了更新的BIOS固件，更新的CPU，以及改善的i226，解决了很多问题。据chiphell论坛网友们的评论，基本上解决了N5105虚拟化死机和直通异常的问题。</p>
 <h2 id="查看自己的硬件在不在天坑里"><a href="#查看自己的硬件在不在天坑里" class="headerlink" title="查看自己的硬件在不在天坑里"></a>查看自己的硬件在不在天坑里</h2><p>最简单的，在你购买的渠道询问：这是第几版的N5105工控机 如果卖家回答你：第一版的 </p>
 <p>那么，恭喜你！中奖了 ！早期天坑版本。</p>
-<p>或者是查看商品信息，一般会写着网卡型号：如果是i255，一般是第一版的；i226一般是较新的，但不好判断，主要还是得手动查看</p>
+<p>或者是查看商品信息，一般会写着网卡型号：如果是i255，一般是第一版的；i226一般是较新的，但不好判断，主要还是得手动查看。</p>
+<p>一般来说，只有第一版的N5105是0x0CPU步进的，非常容易辨识。</p>
 <p>在Linux终端里输入如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep stepping</span><br></pre></td></tr></table></figure>
 
@@ -123,6 +131,7 @@
 
 <p>那么，恭喜你！中奖了 ！该网卡不适合虚拟机直通，不过，可以通过创建网桥&#x2F;半虚拟化方式来使用。</p>
 <p>（曲线救国方案：不支持模拟mac设备，不能修改mac地址，不支持在系统内创建桥接）</p>
+<p><strong>总而言之，查看是不是第一版的天坑版本有两种有效的方法：查看CPU步进，询问卖家。</strong></p>
 <h1 id="二-更新PVE以填部分坑"><a href="#二-更新PVE以填部分坑" class="headerlink" title="二.更新PVE以填部分坑"></a>二.更新PVE以填部分坑</h1><p><strong>PVE 是什么</strong></p>
 <p>据 PVE 的<a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Main_Page">官网介绍</a>，PVE 是Proxmox Virtual Environment 的缩写， 是一个完整的开源服务器管理平台，用于企业虚拟化。它将 KVM 管理程序和 Linux 容器 (LXC)、软件定义的存储和网络功能紧密集成在一个平台上。借助基于 Web 的集成用户界面，您可以轻松管理 VM 和容器、集群的高可用性或集成的灾难恢复工具。</p>
 <p>它是基于Debian11的系统，因此，所有的包管理操作同Debian一致，可玩性也十分强大。</p>
