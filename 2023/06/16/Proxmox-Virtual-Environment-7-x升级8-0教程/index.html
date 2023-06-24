@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Proxmox Virtual Environment 7.x升级8.0教程 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="Debian 12已经发布了，紧跟Debian发布节奏的PVE也随之发布了8.0（Beta）[目前已经正式版了2023-6-24 15:30:36]。本文将展示PVE8的一些新特性和如何升级至最新版本。">
+  
+
+  
+  
+  <meta name="keywords" content="PVE">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Proxmox Virtual Environment 7.x升级8.0教程"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Proxmox Virtual Environment 7.x升级8.0教程</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/06/16/Proxmox-Virtual-Environment-7-x升级8-0教程/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-06-16T14:16:14.000Z">
+          2023-06-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Debian 12已经发布了，紧跟Debian发布节奏的PVE也随之发布了8.0（Beta）[目前已经正式版了2023-6-24 15:30:36]。本文将展示PVE8的一些新特性和如何升级至最新版本。</p>
+<span id="more"></span>
+
+<h1 id="主要的更新内容"><a href="#主要的更新内容" class="headerlink" title="主要的更新内容"></a>主要的更新内容</h1><h2 id="1-从5-15-x更新到Linux-6-2-16的新内核"><a href="#1-从5-15-x更新到Linux-6-2-16的新内核" class="headerlink" title="1.从5.15.x更新到Linux 6.2.16的新内核"></a>1.从5.15.x更新到Linux 6.2.16的新内核</h2><p>PVE8(Beta)默认搭载Linux6.2.16新内核，只有待下一个LinuxKernelLTS时才会在正式版中搭载长期服务分支内核。</p>
+<p>6.2.x内核相较于5.15.x内核的主要变化</p>
+<blockquote>
+<p>1.添加更多设备支持：优化Intel13代等。几乎支持至2023-06的所有硬件</p>
+<p>2.内核支持Rust</p>
+<p>3.Btrfs，EXT4文件系统性能改进</p>
+</blockquote>
+<h2 id="PVE7-4-gt-8"><a href="#PVE7-4-gt-8" class="headerlink" title="PVE7.4-&gt;8"></a>PVE7.4-&gt;8</h2><p>主要变化</p>
+<blockquote>
+<p>1.自动优化Ceph集群配置</p>
+<p>2.完善笔记对markdown的支持</p>
+<p><strong>3.手机访问管理页面UI优化</strong></p>
+<p>4.QEMU8</p>
+</blockquote>
+<h1 id="通过包管理器更新到最新版本"><a href="#通过包管理器更新到最新版本" class="headerlink" title="通过包管理器更新到最新版本"></a>通过包管理器更新到最新版本</h1><p>首先，通过ssh或者在网页终端输入命令，将PVE7.x更新到7.4.x最新版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt dist-upgrade</span><br></pre></td></tr></table></figure>
+
+<p>接着，运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pve7to8 --full</span><br></pre></td></tr></table></figure>
+
+<p>检查有没有什么不兼容的部分（主要是各种软件包）</p>
+<p>如果输出的内容包含FAILURES: 0，则可以更新，否则，你可以根据提示排障。</p>
+<p>然后，在终端执行以下命令，切换到新的存储库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&#x27;s/bullseye/bookworm/g&#x27;</span> /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+<p>使用ls命令查看&#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;路径的各种文件，将里面的其它版本库文件一同切换到新版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@pve:/etc/apt/sources.list.d<span class="comment"># ls</span></span><br><span class="line">docker.list  pve-enterprise.list  pve-no-subscription.list</span><br><span class="line">root@pve:/etc/apt/sources.list.d<span class="comment"># sed -i &#x27;s/bullseye/bookworm/g&#x27; docker.list</span></span><br><span class="line">root@pve:/etc/apt/sources.list.d<span class="comment"># sed -i &#x27;s/bullseye/bookworm/g&#x27; pve-no-subscription.list</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果不需要使用PVE8的测试版，以下切换分支内容可以忽略（2023-6-24 15:33:37）</p>
+<p>由于目前PVE8还是测试版我们还必须将PVE版本库分支切换为测试分支。</p>
+<p>（pve-no-subscription为我的PVE包存储库仓库文件，可能和你的不一样）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&#x27;s/pve-no-subscription/pvetest/g&#x27;</span> pve-no-subscription.list</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后，更新包存储器和系统 并重启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt full-upgrade -y</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<p>重启后，你将会在左上角看到PVE8.</p>
+<p><img src="/..%5Cimages%5C11.png" alt="PVE8"></p>
+<p><img src="/..%5Cimages%5C12.png" alt="PVE8"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PVE/">PVE</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
