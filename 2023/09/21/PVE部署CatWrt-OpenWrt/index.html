@@ -82,12 +82,13 @@
         <p>在PVE下部署安装和配置CatWrt，实现软路由的虚拟化。</p>
 <span id="more"></span>
 
-<h1 id="CatWrt是什么？"><a href="#CatWrt是什么？" class="headerlink" title="CatWrt是什么？"></a>CatWrt是什么？</h1><p>CatWrt 是基于开源的 Lean <a target="_blank" rel="noopener" href="https://github.com/coolsnowwolf/lede">LEDE</a> 仓库编译的 OpenWrt 发行版，LEDE相较于OpenWRT官方添加了更多符合中国用户的插件，更适合中国用户的操作习惯。而LEDE提供一个付费的版本Q-WRT，以及LEDE开源代码，而CatWrt是由饱受好评的Q-WRT(LEDE)源代码直接编译而来，提供较为完善的社区支持和多种硬件和架构。</p>
+<h1 id="CatWrt是什么？"><a href="#CatWrt是什么？" class="headerlink" title="CatWrt是什么？"></a>CatWrt是什么？</h1><p>CatWrt 是基于开源的 Lean <a target="_blank" rel="noopener" href="https://github.com/coolsnowwolf/lede">LEDE</a> 仓库编译的 OpenWrt 发行版，LEDE相较于OpenWRT官方添加了更多符合中国用户的插件，其更符合中国用户的操作习惯。</p>
+<p>CatWrt是由饱受好评的LEDE源代码<strong>直接</strong>*编译而来，其提供了相似于LEDE的硬路由私有化付费版本QWRT的体验，同时提供了较为完善的社区支持和多种硬件及架构的支持。</p>
 <p>项目地址：</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/">GitHub - miaoermua&#x2F;CatWrt: 🌠 客制化 OpenWrt 智能网关</a></p>
 <p><img src="https://camo.githubusercontent.com/7f35acd0ad70f618508fc1c56e13a9a6c2babc82e3184a953498c3448f351ed0/68747470733a2f2f666173746c792e6a7364656c6976722e6e65742f67682f6d69616f65726d75612f737461746963406d61696e2f696d616765732f4361745772745f67682e6a7067" alt="img"></p>
 <p>官网地址：<a target="_blank" rel="noopener" href="https://www.miaoer.xyz/posts/network/catwrt.v23.8">CatWrt.v23.8 超强性能超稳固件，支持多款热门 mt798x 路由 - 喵二の小博客 (miaoer.xyz)</a></p>
-<p>你可以这么理解：CatWrt与QWrt的关系同CentOS与RHEL，保留100%的二进制兼容性，免费的<strong>技术支持</strong>*和更新。</p>
+<p>而但免费的<strong>技术支持</strong>*和更新。</p>
 <h1 id="在PVE上安装OpenWrt"><a href="#在PVE上安装OpenWrt" class="headerlink" title="在PVE上安装OpenWrt"></a>在PVE上安装OpenWrt</h1><h3 id="1-创建虚拟机"><a href="#1-创建虚拟机" class="headerlink" title="1.创建虚拟机"></a>1.创建虚拟机</h3><p><img src="/../images/13.png" alt="image-20230921173655356"></p>
 <p><img src="/../images/14.png" alt="image"></p>
 <p>此处选择<strong>不使用任何介质</strong>，客户机操作系统选择Linux，版本默认</p>
@@ -130,6 +131,8 @@
 <p>使用网线通过与vmbr0桥接的交换机相连，在浏览器输入192.168.1.4进入，进行后续拨号，DHCP，更高网口信息等配置。</p>
 <p><img src="/../images/24.png" alt="image"></p>
 <p>用户名root，密码password.</p>
+<p>1)*.CatWrt相较于LEDE有一部分软件包的修改和配置的修改</p>
+<p>2)*.基础问题提供免费技术支持，特殊问题除外</p>
 
       
     </div>
