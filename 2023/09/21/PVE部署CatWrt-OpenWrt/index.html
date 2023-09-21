@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>PVE部署CatWrt(OpenWrt) | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="在PVE下部署安装和配置CatWrt，实现软路由的虚拟化。">
+  
+
+  
+  
+  <meta name="keywords" content="PVE,OpenWrt">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="PVE部署CatWrt(OpenWrt)"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>PVE部署CatWrt(OpenWrt)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/09/21/PVE部署CatWrt-OpenWrt/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-09-21T09:17:57.000Z">
+          2023-09-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在PVE下部署安装和配置CatWrt，实现软路由的虚拟化。</p>
+<span id="more"></span>
+
+<h1 id="CatWrt是什么？"><a href="#CatWrt是什么？" class="headerlink" title="CatWrt是什么？"></a>CatWrt是什么？</h1><p>CatWrt 是基于开源的 Lean <a target="_blank" rel="noopener" href="https://github.com/coolsnowwolf/lede">LEDE</a> 仓库编译的 OpenWrt 发行版，LEDE相较于OpenWRT官方添加了更多符合中国用户的插件，更适合中国用户的操作习惯。而LEDE提供一个付费的版本Q-WRT，以及LEDE开源代码，而CatWrt是由饱受好评的Q-WRT(LEDE)源代码直接编译而来，提供较为完善的社区支持和多种硬件和架构。</p>
+<p>项目地址：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/">GitHub - miaoermua&#x2F;CatWrt: 🌠 客制化 OpenWrt 智能网关</a></p>
+<p><img src="https://camo.githubusercontent.com/7f35acd0ad70f618508fc1c56e13a9a6c2babc82e3184a953498c3448f351ed0/68747470733a2f2f666173746c792e6a7364656c6976722e6e65742f67682f6d69616f65726d75612f737461746963406d61696e2f696d616765732f4361745772745f67682e6a7067" alt="img"></p>
+<p>官网地址：<a target="_blank" rel="noopener" href="https://www.miaoer.xyz/posts/network/catwrt.v23.8">CatWrt.v23.8 超强性能超稳固件，支持多款热门 mt798x 路由 - 喵二の小博客 (miaoer.xyz)</a></p>
+<p>你可以这么理解：CatWrt与QWrt的关系同CentOS与RHEL，保留100%的二进制兼容性，免费的<strong>技术支持</strong>*和更新。</p>
+<h1 id="在PVE上安装OpenWrt"><a href="#在PVE上安装OpenWrt" class="headerlink" title="在PVE上安装OpenWrt"></a>在PVE上安装OpenWrt</h1><h3 id="1-创建虚拟机"><a href="#1-创建虚拟机" class="headerlink" title="1.创建虚拟机"></a>1.创建虚拟机</h3><p><img src="/../images/13.png" alt="image-20230921173655356"></p>
+<p><img src="/../images/14.png" alt="image"></p>
+<p>此处选择<strong>不使用任何介质</strong>，客户机操作系统选择Linux，版本默认</p>
+<p><img src="/../images/15.png" alt="image"></p>
+<p>这里的BIOS选项根据自己的喜好选择默认(SeaBIOS)，或是OVMF(UEFI)，关系到后面添加镜像时选择的版本。</p>
+<p>如果选择UEFI，<strong>不勾选 添加EFI磁盘</strong>。显卡建议<strong>保持默认</strong>或者标准VGA,VMware兼容</p>
+<p><img src="/../images/16.png" alt="image"></p>
+<p>此处，将磁盘删除。</p>
+<p><img src="/../images/17.png" alt="image"></p>
+<p>此处，根据自己电脑的情况设置CPU核心数，类别可以保持默认，也可以根据自己的情况选择。为了提升性能，这里选择host，并设置了CPU权重以提升调度积极性-&gt;提升性能。</p>
+<p><img src="/../images/18.png" alt="image"></p>
+<p>内存设置：如果不跑代理类软件，仅用于拨号，设置512MB，768MB即可，如果需要跑代理类软件，建议设置更高，如1024.如果需要跑容器（docker），建议设置2048或更高。</p>
+<p>勾选Ballooning设备将使内存变更为动态分配，如果需要使用监控内存类的软件(如htop，pcdn内存检测)，则不建议勾选。部分软件会因为此无法判断内存大小而出现内存泄露。</p>
+<p><img src="/../images/19.png" alt="image"></p>
+<p>网络设置：我们知道，非(单臂、庞)路由器是有两类接口的，一类WAN，一类LAN。</p>
+<p>而CatWrt的第一个接口默认设置为LAN接口，第二个接口默认为WAN，因此在此处应谨慎操作，避免因接口顺序设置出错导致前期配置困难。</p>
+<p>在完成配置后，添加第二个网口。</p>
+<p><img src="/../images/20.png" alt="image"></p>
+<p>找到刚刚创建的设备，点击之，选择硬件，添加-&gt;网络设备-&gt;选择另一接口(WAN)</p>
+<p><img src="/../images/21.png" alt="image"></p>
+<h3 id="2-导入CatWrt硬盘"><a href="#2-导入CatWrt硬盘" class="headerlink" title="2.导入CatWrt硬盘"></a>2.导入CatWrt硬盘</h3><p>大部分的OpenWrtx86都提供.img格式磁盘镜像或相应的打包压缩文件，这里需要对应系统夹选择BIOS或EFI而选择相应系统。</p>
+<p>比如，我前面选择的是OVMF(EFI)则我应该下载efi的镜像，选择SeaBIOS的，则因下载不带EFI的镜像。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/releases">Releases · miaoermua&#x2F;CatWrt (github.com)</a></p>
+<p><img src="/../images/22.png" alt="image"></p>
+<p>使用ssh连接PVE主机，或是在网页的Shell中</p>
+<p>下载镜像并导入虚拟磁盘。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# wget https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-squashfs-combined.img</span><br><span class="line">root@pve:~# qm importdisk 104 ./CatWrt.v23.8.x86_64-squashfs-combined.img local-lvm</span><br></pre></td></tr></table></figure>
+
+<p>qm importdisk是命令</p>
+<p>104是虚拟机ID</p>
+<p>.&#x2F;CatWrt.v23.8.x86_64-squashfs-combined.img是镜像路径。</p>
+<p>如果是通过浏览器上传的，则在&#x2F;var&#x2F;lib&#x2F;vz&#x2F;template&#x2F;iso&#x2F;xxx.img下。</p>
+<p>local-lvm是存储位置，选用本地存储</p>
+<p>导入成功后显示successful</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Successfully imported disk as &#x27;unused0:local-lvm:vm-104-disk-0&#x27;</span><br><span class="line">root@pve:~#</span><br></pre></td></tr></table></figure>
+
+<p>接着，按如下步骤导入磁盘</p>
+<p><img src="/../images/23.png" alt="image"></p>
+<p>完成后启动。</p>
+<p>使用网线通过与vmbr0桥接的交换机相连，在浏览器输入192.168.1.4进入，进行后续拨号，DHCP，更高网口信息等配置。</p>
+<p><img src="/../images/24.png" alt="image"></p>
+<p>用户名root，密码password.</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PVE/">PVE</a><a href="/tags/OpenWrt/">OpenWrt</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
