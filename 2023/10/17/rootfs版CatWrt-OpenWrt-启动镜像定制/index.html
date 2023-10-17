@@ -1,0 +1,320 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rootfs版CatWrt(OpenWrt)启动镜像定制 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="rootfs版CatWrt(OpenWrt)启动镜像的定制
+包括镜像扩容，源修改，软件包定制">
+  
+
+  
+  
+  <meta name="keywords" content="OpenWrt">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="rootfs版CatWrt(OpenWrt)启动镜像定制"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>rootfs版CatWrt(OpenWrt)启动镜像定制</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/10/17/rootfs版CatWrt-OpenWrt-启动镜像定制/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-10-17T09:38:16.000Z">
+          2023-10-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>rootfs版CatWrt(OpenWrt)启动镜像的定制</p>
+<p>包括镜像扩容，源修改，软件包定制</p>
+<span id="more"></span>
+
+<p>​		熟悉软路由的朋友们都知道我们在下载固件(镜像)的时候，一般都是选择带有squashfs字样的镜像，然而往往还有另一个神秘的选择- rootfs。它却很少被人们提起，它的一般用途是拿来做docker的镜像，但是我们还可以拿做另一件事，OpenWrt的系统分区制作。</p>
+<p>​		我们平时接触到的OpenWrt的根文件系统一般都是 squashfs，这个文件系统给我们带来一定的安全感，我们在软路由上装插件、修改配置导致OpenWrt出现异常时可以通过清除挂载的文件修改操作来还原初始状态；在硬路由上，squashfs+配置分区的外挂载使我们可以轻易的通过外置按键还原对路由器的更改。虽然squashfs很好，但是它也阻止了我们直接往系统分区增添、删除、修改我们想要的文件、配置和程序。</p>
+<p>想要解决系统分区不能修改的解决方法很简单，也是OpenWrt系默认的操作，</p>
+<p>第一种方式：建立一个overlay分区，将所有修改后的文件存放于此，使用挂载的方式直接覆盖系统分区，实现修改，这种操作类似建立一个镜像，通过对镜像的修改而改动系统。</p>
+<p>当我们清空&#x2F;overlay分区的时候，便实现了对系统分区修改的还原。</p>
+<p>第二种方式，就是将系统分区的squashfs文件系统中的文件移动到其它可写的文件系统，如f2fs，ext4，xfs等，并建立启动信息启动系统。OpenWrtx86可以在系统-&gt;挂载点-&gt;&#x2F;-&gt;修改，通过拷贝&#x2F;下的文件到新的可写路径，并建立启动项来实现对&#x2F;的可读写，但是这种方式对新手并不友好，甚至一些老手都在此栽过跟头。</p>
+<p>除此之外，我们还有第三种方式：<strong>使用Linux kernel+rootfs+grub(bootlodaer)制作一个可启动的Linux系统，这种方式建立的系统，根路径在root权限下是可读写的，本文将介绍此种方法</strong>。</p>
+<p>实现的原理：同<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1114481">Linux启动过程</a> </p>
+<h2 id="第一步：准备阶段"><a href="#第一步：准备阶段" class="headerlink" title="第一步：准备阶段"></a>第一步：准备阶段</h2><h3 id="准备内核-kernel-、引导-grub-和rootfs。"><a href="#准备内核-kernel-、引导-grub-和rootfs。" class="headerlink" title="准备内核(kernel)、引导(grub))和rootfs。"></a>准备内核(kernel)、引导(grub))和rootfs。</h3><p>启动引导(bootlodaer)启动引导程序(grub），引导程序启动内核(kernel)，内核初始化(mount and init)rootfs，启动rootfs里的进程。 </p>
+<p>下载启动分区 <a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-squashfs-combined-efi.img">EFI引导的</a> <a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-squashfs-combined.img">传统BIOS引导方式</a></p>
+<p>由于一般的OpenWrt都不提供单独的内核和引导，我们只能下载我们要制作的目标版本镜像来做底包修改。 选择适当引导方式的底包制作镜像将可以很方便的在对应目标的系统启动openwrt系统。</p>
+<p>下载rootfs <a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-rootfs.tar.gz">链接</a> 一般rootfs都是以 xxx-rootfs.tar.gz结尾</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-squashfs-combined-efi.img</span><br><span class="line"></span><br><span class="line">wget https://github.com/miaoermua/CatWrt/releases/download/v23.8/CatWrt.v23.8.x86_64-rootfs.tar.gz</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="准备多分区挂载工具-kpartx"><a href="#准备多分区挂载工具-kpartx" class="headerlink" title="准备多分区挂载工具 kpartx"></a>准备多分区挂载工具 kpartx</h3><p>Kpartx is a tool that creating device mappings for partitions.</p>
+<p>Debian&#x2F;Ubuntu:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install kpartx -y </span><br></pre></td></tr></table></figure>
+
+<p>alpineLinux: </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk add kpartx</span><br></pre></td></tr></table></figure>
+
+<p>CentOS&#x2F;Fedora&#x2F;OpenRuler:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install kpartx -y</span><br></pre></td></tr></table></figure>
+
+<p> <img src="/../images/25.png" alt="image"></p>
+<h2 id="第二步：镜像处理"><a href="#第二步：镜像处理" class="headerlink" title="第二步：镜像处理"></a>第二步：镜像处理</h2><blockquote>
+<p>1.使用cfdisk(fdisk)工具删掉镜像里的系统分区 </p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfdisk CatWrt.v23.8.x86_64-squashfs-combined-efi.img</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/26.png" alt="image"></p>
+<p>完成Delete后，选择Write，输入yes，然后Quit退出</p>
+<p>等待同步完成</p>
+<p><img src="/../images/27.png" alt="image"></p>
+<blockquote>
+<p>2.使用dd命令给镜像增加空间</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero bs=1M count=256 &gt;&gt;CatWrt.v23.8.x86_64-squashfs-combined-efi.img </span><br></pre></td></tr></table></figure>
+
+<p>bs参数 数字+单位  count参数 数量 &gt;&gt; 代表追加</p>
+<p>意思是从&#x2F;dev&#x2F;zero中取出1M*256的容量追加到镜像中（扩容256M）</p>
+<p>我们可以根据需要给镜像扩容任意大小 </p>
+<p>比如 dd if&#x3D;&#x2F;dev&#x2F;zero bs&#x3D;1G count&#x3D;5 &gt;&gt;CatWrt.v23.8.x86_64-squashfs-combined-efi.img 代表扩容5G</p>
+<blockquote>
+<p>3.使用cfdisk给扩容后的镜像尾建立分区</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfdisk CatWrt.v23.8.x86_64-squashfs-combined-efi.img</span><br></pre></td></tr></table></figure>
+
+<p>选择Free space</p>
+<p><img src="/../images/28.png" alt="image"></p>
+<p>接着，会询问我们要创建的分区大小，这里直接回车就行</p>
+<p>完成后选择Write，yes，Quit</p>
+<p>fdisk操作类似</p>
+<p><img src="/../images/29.png" alt="image"></p>
+<blockquote>
+<p>4.使用kpartx挂载镜像为硬盘回环设备</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">losetup /dev/loop7 CatWrt.v23.8.x86_64-squashfs-combined-efi.img</span><br></pre></td></tr></table></figure>
+
+<p>如果&#x2F;dev&#x2F;loop7被占用就换其它的loop0 loop1什么的</p>
+<p>查看映射的分区表 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kpartx -av /dev/loop7</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/30.png" alt="image"></p>
+<p>其中 loop7p2就是我们的目标</p>
+<p>格式化该分区 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/mapper/loop7p2</span><br></pre></td></tr></table></figure>
+
+<p>!CatWrt内核支持f2fs，格式化成f2fs格式也可以(f2fs适合将镜像刷写在闪存存储介质上 如U盘，移动硬盘SSD,固态硬盘(包括nvme固态，m2SATA，SATASSD等)) 命令mkfs.f2fs &#x2F;dev&#x2F;mapper&#x2F;loop7p2</p>
+<p><img src="/../images/31.png" alt="image"></p>
+<blockquote>
+<p>5.查看分区UUID （在格式化之后分区UUID会改变，因而需要先格式化再查看）</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfdisk /dev/loop7</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/32.png" alt="image"></p>
+<p>分区UUID用于在后续引导系统</p>
+<blockquote>
+<p>6.建立一个临时挂载路径并挂载系统分区</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /mnt/mount</span><br><span class="line">mount /dev/mapper/loop7p2 /mnt/mount</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/33.png" alt="image"></p>
+<blockquote>
+<p>7.解压rootfs </p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf CatWrt.v23.8.x86_64-rootfs.tar.gz -C /mnt/mount</span><br><span class="line">cd /mnt/mount</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 我们已经制作完成启动镜像了 </p>
+<p><img src="/../images/34.png" alt="image"></p>
+<p><strong>第七步结束。如果不需要修改系统，请转到第八步</strong></p>
+<hr>
+<p>此时这个镜像的系统分区就已经处理好了 。当然，我们还可以优化一下镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chroot /mnt/mount</span><br></pre></td></tr></table></figure>
+
+<p>编辑源，更新部分软件等 (CatWrt具有)</p>
+<p><img src="/../images/35.png" alt="image"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash-5.2# vim /etc/opkg/distfeeds.conf</span><br></pre></td></tr></table></figure>
+
+<p>换腾讯源</p>
+<blockquote>
+<p>src&#x2F;gz openwrt_core <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/snapshots/targets/x86/64/packages">https://mirrors.cloud.tencent.com/lede/snapshots/targets/x86/64/packages</a></p>
+<p>src&#x2F;gz openwrt_base <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/base">https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/base</a></p>
+<p>src&#x2F;gz openwrt_luci <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/releases/18.06.9/packages/x86_64/luci">https://mirrors.cloud.tencent.com/lede/releases/18.06.9/packages/x86_64/luci</a></p>
+<p>src&#x2F;gz openwrt_packages <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/packages">https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/packages</a></p>
+<p>src&#x2F;gz openwrt_routing <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/routing">https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/routing</a></p>
+<p>src&#x2F;gz openwrt_telephony <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/telephony">https://mirrors.cloud.tencent.com/lede/snapshots/packages/x86_64/telephony</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash-5.2# mkdir /var/lock -p</span><br><span class="line">bash-5.2# opkg update</span><br></pre></td></tr></table></figure>
+
+<p>安装程序包等…（可看文末）</p>
+<p>退出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash-5.2# exit</span><br><span class="line"></span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>8.卸载系统分区</p>
+</blockquote>
+<p>root@pve:~# umount &#x2F;mnt&#x2F;mount</p>
+<blockquote>
+<p>9.挂载boot分区，修改启动项</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/mapper/loop7p1 /mnt/mount</span><br><span class="line"></span><br><span class="line">ls /mnt/mount</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/36.png" alt="image"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~/OpenWrt# cd /mnt/mount/boot/grub/</span><br><span class="line"></span><br><span class="line">root@pve:/mnt/mount/boot/grub# ls</span><br><span class="line"></span><br><span class="line">boot.img core.img grub.cfg</span><br><span class="line"></span><br><span class="line">root@pve:/mnt/mount/boot/grub# vim grub.cfg</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>10.将前面记录的UUID填入(替换)到PARTUUID中</p>
+</blockquote>
+<p><img src="/../images/37.png" alt="image"></p>
+<blockquote>
+<p>11.保存文件，卸载分区</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umount /mnt/mount</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>12.卸载回环设备</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~# losetup -d /dev/loop7</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h2><p>将新的镜像（CatWrt.v23.8.x86_64-squashfs-combined-efi.img）刷入启动盘，启动。（PVE添加硬盘）</p>
+<blockquote>
+<p>这个时候应该改名叫CatWrt.v23.8.x86_64-6G-ext4-rootfs-efi.img才对</p>
+</blockquote>
+<p>Enjoy Image！</p>
+<h2 id="截图"><a href="#截图" class="headerlink" title="截图"></a>截图</h2><p>以下是10G版本扩容的截图</p>
+<p>10G扩容版的下载链接：<a target="_blank" rel="noopener" href="http://v4.iotroom.top:5244/CatWrt/v23.8/CatWrt.v23.8.x86_64-10Grootfs-ext4.img.7z">Here</a></p>
+<p><img src="/../images/38.png" alt="image"></p>
+<p><img src="/../images/39.png" alt="image"></p>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><blockquote>
+<p>虚拟化环境下卸载amdGPU、IntelGPU驱动</p>
+</blockquote>
+<p>opkg remove amdgpu-firmware</p>
+<p>opkg remove i915-firmware</p>
+<blockquote>
+<p>更新curl</p>
+</blockquote>
+<p>opkg upgrade libcurl4 curl</p>
+<p><img src="/../images/40.png" alt="image"></p>
+<p>可安全更新的程序列表(等)</p>
+<blockquote>
+<p>xray-core v2ray-core v2ray-geoip fdisk blkid  mount-utils libopenssl-conf node libfdisk1 samba4-libs cfdisk parted samba4-server tailscale ethtool libblkid1 lsblk libmount1 tailscaled zerotier libopenssl3 terminfo</p>
+</blockquote>
+<p>不建议更新的 :kmod-xxx uci docker(d) dnsmasq-full containerd strongswan等</p>
+<p>安装apk包管理器&amp;&amp;neofetch</p>
+<p>*显示 Linux 系统信息和发行版图标</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">opkg install apk alpine-keys alpine-repositories</span><br><span class="line">apk update --allow-untrusted</span><br><span class="line">apk add neofetch --allow-untrusted</span><br><span class="line">neofetch</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/41.png" alt="image"></p>
+<p>使用apk包管理器，我们可以安装一些其它东西，比如java，可以搭建mc服务器。安装装glibc支持 运行其它程序，安装完整开发环境、做远程测试服务器等…</p>
+<blockquote>
+<p>CatWrt扩展</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.miaoer.xyz/posts/network/catwrt-install-application">CatWrt 扩展应用安装，全系生态通用 - 喵二の小博客 (miaoer.xyz)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/OpenWrt/">OpenWrt</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
