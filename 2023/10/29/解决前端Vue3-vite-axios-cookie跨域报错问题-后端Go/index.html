@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>解决前端Vue3+vite+axios+cookie跨域报错问题 后端Go+gin | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="自己在写一个项目，目前遇到了问题：前端需要向后端执行ajax请求获取数据，需要传递cookie。如果使用默认的代码不进行配置则会出现跨域问题cors报错，本文将解决问题.">
+  
+
+  
+  
+  <meta name="keywords" content="vue,golang,全栈笔记">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="解决前端Vue3+vite+axios+cookie跨域报错问题 后端Go+gin"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>解决前端Vue3+vite+axios+cookie跨域报错问题 后端Go+gin</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/10/29/解决前端Vue3-vite-axios-cookie跨域报错问题-后端Go/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-10-29T09:50:57.000Z">
+          2023-10-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>自己在写一个项目，目前遇到了问题：前端需要向后端执行ajax请求获取数据，需要传递cookie。如果使用默认的代码不进行配置则会出现跨域问题cors报错，本文将解决问题.</p>
+<span id="more"></span>
+
+<p>前端(node.js+Vite)：<a target="_blank" rel="noopener" href="http://localhost:5173/">http://localhost:5173</a> </p>
+<p>后端(golang + gin)：<a target="_blank" rel="noopener" href="http://localhost:8088/">http://localhost:8088/</a></p>
+<h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>前端需要向后端请求数据&#x2F;api&#x2F;devices&#x2F;snlspjrnzxcevyfk&#x2F;info,后端通过前端传递过来的cookie进行身份识别，授权成功返回200，JSON数据, 失败返回401未授权或404.</p>
+<p>当我们使用默认参数不做配置时，直接请求会被拦截，进而无法获取数据。参考网上的教程在解决请求跨域后，又少有解决cookie传递的，参考几篇资料后，结合本人项目，目前问题已解决。</p>
+<p>cookie:IOMAuth</p>
+<h1 id="解决措施"><a href="#解决措施" class="headerlink" title="解决措施"></a>解决措施</h1><h2 id="前端部分"><a href="#前端部分" class="headerlink" title="前端部分"></a>前端部分</h2><h3 id="vite-config-js"><a href="#vite-config-js" class="headerlink" title="vite.config.js"></a>vite.config.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="title function_">vue</span>(),</span><br><span class="line">    <span class="title class_">AutoImport</span>(&#123;</span><br><span class="line">      <span class="attr">resolvers</span>: [<span class="title class_">ElementPlusResolver</span>()],</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="title class_">Components</span>(&#123;</span><br><span class="line">      <span class="attr">resolvers</span>: [<span class="title class_">ElementPlusResolver</span>()],</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">resolve</span>: &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;@&#x27;</span>: <span class="title function_">fileURLToPath</span>(<span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;./src&#x27;</span>, <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">url</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">server</span>: &#123;</span><br><span class="line">    <span class="attr">host</span>: <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">    <span class="comment">//port: 8088,</span></span><br><span class="line">    <span class="attr">proxy</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;/api&#x27;</span>: &#123;</span><br><span class="line">        <span class="comment">// 后台地址</span></span><br><span class="line">        <span class="attr">target</span>: <span class="string">&#x27;http://localhost:8088/&#x27;</span>,</span><br><span class="line">        <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">secure</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">ws</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">followRedirects</span>: <span class="literal">true</span>, <span class="comment">//cookie自动跳转传递</span></span><br><span class="line">        <span class="attr">rewrite</span>: <span class="function"><span class="params">path</span> =&gt;</span> path.<span class="title function_">replace</span>(<span class="regexp">/^\/api/</span>, <span class="string">&#x27;&#x27;</span>),</span><br><span class="line">        <span class="title function_">onProxyReq</span>(<span class="params">proxyReq, req, res</span>) &#123;</span><br><span class="line">          originHost = req.<span class="property">headers</span>[<span class="string">&#x27;x-forwarded-for&#x27;</span>]</span><br><span class="line">          <span class="keyword">const</span> cookie = req.<span class="property">headers</span>[<span class="string">&#x27;cookie&#x27;</span>]</span><br><span class="line">          <span class="keyword">if</span> (cookie) &#123;</span><br><span class="line">            proxyReq.<span class="title function_">setHeader</span>(<span class="string">&#x27;cookie&#x27;</span>, cookie)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="title function_">onProxyRes</span>(<span class="params">proxyRes, req, res</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span> (proxyRes.<span class="property">headers</span>[<span class="string">&#x27;set-cookie&#x27;</span>]) &#123;</span><br><span class="line">            <span class="comment">// cookie 传递重点</span></span><br><span class="line">            proxyRes.<span class="property">headers</span>[<span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span>] = <span class="string">&#x27;true&#x27;</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="axios配置-axiosInstance-js"><a href="#axios配置-axiosInstance-js" class="headerlink" title="axios配置 axiosInstance.js"></a>axios配置 axiosInstance.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"></span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">withCredentials</span> = <span class="literal">true</span>; <span class="comment">//重点</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">API</span> = axios.<span class="title function_">create</span>(&#123;</span><br><span class="line">	<span class="attr">baseURL</span>:<span class="string">&#x27;http://localhost:8088&#x27;</span>, </span><br><span class="line">	<span class="attr">timeout</span>: <span class="number">2000</span>,                   </span><br><span class="line">	<span class="attr">withCredentials</span>:<span class="literal">true</span> <span class="comment">//重点 这参数可以放上边，也可以放里面</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="variable constant_">API</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h2><h3 id="go-gin路由设置"><a href="#go-gin路由设置" class="headerlink" title="go gin路由设置"></a>go gin路由设置</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RouterInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">	global.Router = gin.Default()</span><br><span class="line">	global.Router.Use(<span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		method := c.Request.Method</span><br><span class="line">		origin := c.Request.Header.Get(<span class="string">&quot;Origin&quot;</span>) <span class="comment">//请求头部</span></span><br><span class="line">		<span class="keyword">if</span> origin != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			<span class="comment">//接收客户端发送的origin （重要！）</span></span><br><span class="line">			<span class="comment">//Access-Control-Allow-Origin是必须的,他的值要么是请求Origin字段的值,要么是一个*, 表示接受任意域名的请求</span></span><br><span class="line">			c.Writer.Header().Set(<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>, origin) <span class="comment">//设置为*会报错</span></span><br><span class="line">			<span class="comment">//服务器支持的所有跨域请求的方法</span></span><br><span class="line">			c.Header(<span class="string">&quot;Access-Control-Allow-Methods&quot;</span>, <span class="string">&quot;POST, GET, OPTIONS, PUT, DELETE,UPDATE&quot;</span>)</span><br><span class="line">			<span class="comment">//允许跨域设置可以返回其他子段，可以自定义字段</span></span><br><span class="line">			<span class="comment">//该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。</span></span><br><span class="line">			<span class="comment">//如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。上面的例子指定，getResponseHeader(&#x27;FooBar&#x27;)可以返回FooBar字段的值。</span></span><br><span class="line">			c.Header(<span class="string">&quot;Access-Control-Allow-Headers&quot;</span>, <span class="string">&quot;Authorization, Content-Length, X-CSRF-Token, Token, session, IOMAuth&quot;</span>)</span><br><span class="line">			<span class="comment">// 允许浏览器（客户端）可以解析的头部 （重要）</span></span><br><span class="line">			c.Header(<span class="string">&quot;Access-Control-Expose-Headers&quot;</span>, <span class="string">&quot;Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers&quot;</span>)</span><br><span class="line">			<span class="comment">//设置缓存时间</span></span><br><span class="line">			<span class="comment">//该字段可选，用来指定本次预检请求的有效期，单位为秒。有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。</span></span><br><span class="line">			c.Header(<span class="string">&quot;Access-Control-Max-Age&quot;</span>, <span class="string">&quot;172800&quot;</span>)</span><br><span class="line">			<span class="comment">//允许客户端传递校验信息比如 cookie (重要)</span></span><br><span class="line">			c.Header(<span class="string">&quot;Access-Control-Allow-Credentials&quot;</span>, <span class="string">&quot;true&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//允许类型校验</span></span><br><span class="line">		<span class="keyword">if</span> method == <span class="string">&quot;OPTIONS&quot;</span> &#123;</span><br><span class="line">			c.JSON(http.StatusOK, <span class="string">&quot;ok!&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			<span class="keyword">if</span> err := <span class="built_in">recover</span>(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">				logrus.Panic(<span class="string">&quot;Panic info is: %v&quot;</span>, err)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">		c.Next()</span><br><span class="line">	&#125;)</span><br><span class="line">	regRouter()</span><br><span class="line">	global.Router.Run(<span class="string">&quot;:&quot;</span> + global.WebPort)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/vue/">vue</a><a href="/tags/golang/">golang</a><a href="/tags/全栈笔记/">全栈笔记</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
