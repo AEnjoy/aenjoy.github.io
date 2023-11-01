@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>axios发送简单POST请求，Gin简单处理 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="自己在写一个项目，目前遇到的问题是：根据csdn和axios官网的说明，发送简单POST请求的时候，后端可能没办法正确处理数据，浅浅记录一下解决方案。">
+  
+
+  
+  
+  <meta name="keywords" content="vue,golang,全栈笔记">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="axios发送简单POST请求，Gin简单处理"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>axios发送简单POST请求，Gin简单处理</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/11/02/axios发送简单POST请求，Gin简单处理/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-11-01T16:51:26.000Z">
+          2023-11-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>自己在写一个项目，目前遇到的问题是：根据csdn和axios官网的说明，发送简单POST请求的时候，后端可能没办法正确处理数据，浅浅记录一下解决方案。</p>
+<span id="more"></span>
+
+<h1 id="传递类型对比"><a href="#传递类型对比" class="headerlink" title="传递类型对比"></a>传递类型对比</h1><p>即key:value 键值对，不使用JSON封装</p>
+<p>类似于get请求，可以很简单的从命令行中看出key:value</p>
+<p>我们进行下对比</p>
+<h2 id="curl发送对比"><a href="#curl发送对比" class="headerlink" title="curl发送对比"></a>curl发送对比</h2><p>1.简单POST</p>
+<blockquote>
+<p>curl <a target="_blank" rel="noopener" href="http://localhost:8088/api/auth/signin">http://localhost:8088/api/auth/signin</a>  -X POST -d ‘username&#x3D;admin&amp;password&#x3D;passwords’</p>
+</blockquote>
+<p>2.简单GET</p>
+<blockquote>
+<p>curl “<a target="_blank" rel="noopener" href="http://localhost:8088/api/auth/signin?username=admin&password=passwords">http://localhost:8088/api/auth/signin?username=admin&amp;password=passwords</a>“</p>
+</blockquote>
+<p>3.JSON型POST</p>
+<blockquote>
+<p>curl -X POST -H “Content-Type: application&#x2F;json”   <a target="_blank" rel="noopener" href="http://localhost:8088/api/auth/signin">http://localhost:8088/api/auth/signin</a> -d ‘{“username”:”admin”,”password”:”passwords”}’</p>
+</blockquote>
+<h2 id="接收端对比"><a href="#接收端对比" class="headerlink" title="接收端对比"></a>接收端对比</h2><p>1.处理简单POST请求</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method</span><span class="params">(context *gin.Context)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> global.IsCookieAuthValid(context) &#123; <span class="comment">//防止反复登录授权</span></span><br><span class="line">		<span class="comment">//context.String(http.StatusOK, &quot;ok&quot;)</span></span><br><span class="line">		context.String(http.StatusOK, <span class="string">&quot;Verified&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//println(context.Request.Body)</span></span><br><span class="line">	un := context.PostForm(<span class="string">&quot;username&quot;</span>)</span><br><span class="line">	pw := context.PostForm(<span class="string">&quot;password&quot;</span>)</span><br><span class="line">    <span class="comment">//Code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.处理简单GET请求</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method</span><span class="params">(context *gin.Context)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> global.IsCookieAuthValid(context) &#123; <span class="comment">//防止反复登录授权</span></span><br><span class="line">		<span class="comment">//context.String(http.StatusOK, &quot;ok&quot;)</span></span><br><span class="line">		context.Redirect(<span class="number">302</span>, <span class="string">&quot;/dashboard&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	un := context.DefaultQuery(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">	pw := context.DefaultQuery(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">	<span class="comment">//Code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现 简单方法获取参数都是一行代码的事，比较简单</p>
+<p>而</p>
+<p>3.JSON数据处理…</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">method</span><span class="params">(context *gin.Context)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> global.IsCookieAuthValid(context) &#123; <span class="comment">//防止反复登录授权</span></span><br><span class="line">		<span class="comment">//context.String(http.StatusOK, &quot;ok&quot;)</span></span><br><span class="line">		context.Redirect(<span class="number">302</span>, <span class="string">&quot;/dashboard&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;    </span><br><span class="line">	json := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125;) <span class="comment">//注意该结构接受的内容</span></span><br><span class="line">	context.BindJSON(&amp;json)</span><br><span class="line">    un := json[<span class="string">&quot;username&quot;</span>]</span><br><span class="line">	pw := json[<span class="string">&quot;password&quot;</span>]</span><br><span class="line">    <span class="comment">//Code</span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好吧 也还算简单，但是我们想实现简单的数据传递，而根据axios官网的数据传递方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&#x27;/user/12345&#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>: &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&#x27;Fred&#x27;</span>,</span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&#x27;Flintstone&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这种传递方法会使传递的值后端想进行简单处理是不行的，后端没办法获取到数据，或者直接线程panic了，返回500。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我们需要使用标准的JavaScript方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">login</span>(<span class="params">formName</span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(formName)</span><br><span class="line">      <span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>();</span><br><span class="line">      params.<span class="title function_">append</span>(<span class="string">&#x27;username&#x27;</span>, formName.<span class="property">name</span>);<span class="comment">//标准简单请求参数</span></span><br><span class="line">      params.<span class="title function_">append</span>(<span class="string">&#x27;password&#x27;</span>, formName.<span class="property">password</span>);<span class="comment">//标准简单请求参数</span></span><br><span class="line">      axios.<span class="title function_">post</span>(<span class="string">&#x27;/api/api/auth/signin&#x27;</span>, params).<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">          <span class="title function_">goRouter</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;Dashboard&#x27;</span> &#125;);</span><br><span class="line">          <span class="comment">//ok</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">401</span>) &#123;</span><br><span class="line">          <span class="title class_">ElMessageBox</span>.<span class="title function_">alert</span>(<span class="string">&quot;用户名或密码错误&quot;</span>, <span class="string">&quot;登录失败&quot;</span>, &#123;&#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, <span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;E&#x27;</span>, error.<span class="property">message</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题解决，后端可以按（1.）正常获取数据。</p>
+<p>或者转换为标准json，按（3.）处理</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/vue/">vue</a><a href="/tags/golang/">golang</a><a href="/tags/全栈笔记/">全栈笔记</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
