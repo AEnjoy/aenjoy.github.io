@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用域前置技术绕过GFW的SNI阻断 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="在某些特殊时期，我们的科学上网工具不太好使的时候，我们还有要经常上github找资源、浏览v2ex和查询维基百科的需求，我们可以通过绕过GFW的SNI阻断来避免一些简易网站访问难的问题。">
+  
+
+  
+  
+  <meta name="keywords" content="network">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="利用域前置技术绕过GFW的SNI阻断"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>利用域前置技术绕过GFW的SNI阻断</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/11/12/利用域前置技术绕过GFW的SNI阻断/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-11-11T16:29:15.000Z">
+          2023-11-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在某些特殊时期，我们的科学上网工具不太好使的时候，我们还有要经常上github找资源、浏览v2ex和查询维基百科的需求，我们可以通过绕过GFW的SNI阻断来避免一些简易网站访问难的问题。</p>
+<span id="more"></span>
+
+<h1 id="支持的站点"><a href="#支持的站点" class="headerlink" title="支持的站点"></a>支持的站点</h1><blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.wikipedia.org/">维基百科</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pixiv.net/">Pixiv</a>（支持登录，注册暂不支持）</li>
+<li><a target="_blank" rel="noopener" href="https://steamcommunity.com/">Steam社区</a></li>
+<li>GitHub</li>
+<li><a target="_blank" rel="noopener" href="https://www.tumblr.com/">Tumblr</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.instagram.com/">Instagram</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.quora.com/">Quora</a></li>
+<li>Google reCAPTCHA</li>
+<li><a target="_blank" rel="noopener" href="https://www.reddit.com/">reddit</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.apkmirror.com/">APKMirror</a></li>
+<li><a target="_blank" rel="noopener" href="https://vimeo.com/">vimeo</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.amazon.co.jp/">日本亚马逊</a></li>
+<li><a target="_blank" rel="noopener" href="https://onedrive.live.com/">Microsoft OneDrive</a></li>
+<li>Niconico（部分页面有问题，见<a target="_blank" rel="noopener" href="https://kkgithub.com/URenko/Accesser/issues/19">#19</a>）</li>
+<li>BBC</li>
+<li>Dropbox</li>
+<li>日本时报</li>
+<li>Kobo</li>
+<li>Medium</li>
+<li>Pinterest</li>
+<li>TheTVDB</li>
+<li>雅虎搜索</li>
+<li>Imgur</li>
+<li><a target="_blank" rel="noopener" href="https://mega.nz/">MEGA</a></li>
+<li>OpenAI API</li>
+</ul>
+</blockquote>
+<p>完整列表<a target="_blank" rel="noopener" href="https://github.com/URenko/Accesser/blob/master/accesser/pac">https://github.com/URenko/Accesser/blob/master/accesser/pac</a></p>
+<h1 id="GFW的过滤规则"><a href="#GFW的过滤规则" class="headerlink" title="GFW的过滤规则"></a>GFW的过滤规则</h1><h2 id="轻度污染级别"><a href="#轻度污染级别" class="headerlink" title="轻度污染级别"></a>轻度污染级别</h2><h3 id="DNS污染："><a href="#DNS污染：" class="headerlink" title="DNS污染："></a>DNS污染：</h3><p>我兔通过通知运营商、国内的DNS服务商（运营商DNS、公共DNS等）对指定的域名请求进行污染，使之查询不到一个正确的IP，从而使我们没法访问。</p>
+<p><img src="/../images/44.jpg" alt="DNS污染"></p>
+<p>你可能说我们在电脑、路由器里设置国外的dns就能解决？NO，没用。</p>
+<p>国外的DNS只会徒增你的查询时间，降低网络体验，而且污染问题得不到解决。因为dns查询所用的53端口已经被劫持了，所以你用国外dns和运营商dns是一样的（传统dns查询）。解决方法：使用<strong>国外、权威和加密的</strong>DNS查询。如使用DoT，DoH，DoQ等代替传统dns查询，解决污染。</p>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>部署、使用加密DNS服务器最简单的方法是在局域网内搭建一个加密DNS服务器的中转站，局域网下的其它设备依然使用传统dns查询，但是传统dns查询的ip地址指向的是局域网dns服务器。</p>
+<p>一般我们使用 <a target="_blank" rel="noopener" href="https://adguard.info/zh_cn/welcome.html">AdGuard Home</a></p>
+<p>它的用法可参考这几篇文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.timochan.cn/posts/any_pen/adguard_home_for_me">使用 AdGuard Home 来守护自己的 DNS 查询</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.timochan.cn/posts/any_pen/adguard_home_for_setting">AdGuard Home 调整</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.timochan.cn/posts/jc/adguard_home_configuration_guide">AdGuard Home 中文指南 - TimochanのBlog</a></p>
+<p>由于这种污染级别实在是太低了，我们绕过它也极其容易，目前已经很少单独使用了。往往是轻度污染级别+中度污染级别一起出现使用。</p>
+<h2 id="中度打断级别"><a href="#中度打断级别" class="headerlink" title="中度打断级别"></a>中度打断级别</h2><p>如果你侥幸绕过了DNS污染，正确获取到了服务器的IP，GFW就拿你没办法了吗，你就可以名言正顺的访问被墙的网页？NO！只要我检测到你在访问黑名单页面，我一样可以Ban掉。</p>
+<p>怎么发现我们在访问黑名单网站呢？</p>
+<p>通过对请求头的host进行判断在不在白名单内的IP+黑名单的域名。</p>
+<p>curl 172.67.3.188 -H “host:<a target="_blank" rel="noopener" href="http://www.v2ex.com/">www.v2ex.com</a>“</p>
+<p>如果IP在白名单内（对应的域名肯定都在白名单），那当然皆大欢喜，全部放行。</p>
+<p>如果是非黑白名单IP+非白名单域名，那就给你定期打断。如github.com的定时抽风。</p>
+<p>如果是非黑白名单IP+黑名单域名，那就给你一直打断TLS握手，让你没办法完成TLS握手，重置连接，无法访问。</p>
+<p>对于一般的网站，这种方法足够了。</p>
+<p>如果是黑名单IP，那就丢进路由黑洞，下文会有解释。</p>
+<h3 id="SNI阻断："><a href="#SNI阻断：" class="headerlink" title="SNI阻断："></a>SNI阻断：</h3><p>SNI域名阻断（Server Name Indication Domain Blocking）是一种用于在网络上屏蔽特定网站的技术手段。SNI是Transport Layer Security（TLS）协议的一部分，它允许客户端在与服务器建立加密连接时传输所需访问的网站域名信息。SNI域名阻断利用这一特性，通过检查网络传输中的SNI字段，阻止用户访问特定的网站。</p>
+<p>SNI域名阻断通常由网络管理员、政府或互联网服务提供商（ISP）实施，目的是限制或屏蔽特定网站的访问。这可以用于防止用户访问敏感内容、限制言论自由、打击非法网站或控制互联网使用等目的。然而，SNI域名阻断也引发了一些争议，因为它可能影响用户隐私、言论自由和互联网开放性。</p>
+<p>HTTPS（更准确来讲是TLS）有一个扩展，使得在Client Hello阶段，浏览器会向服务器明文发送要访问网站的域名。而GFW根据这一原理对特定的SNI进行阻断，这就是俗称的SNI阻断。更多的可以去看：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%8D%E7%A7%B0%E6%8C%87%E7%A4%BA">维基百科</a>，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/547260827">看完秒懂什么是SNI - 知乎 (zhihu.com)</a></p>
+<h3 id="解决方案：域前置-Domain-Fronting-代理技术。"><a href="#解决方案：域前置-Domain-Fronting-代理技术。" class="headerlink" title="解决方案：域前置(Domain Fronting)代理技术。"></a>解决方案：域前置(Domain Fronting)代理技术。</h3><p>就是利用有的服务器不验证SNI的这一特点，给GFW和服务器一个假的SNI进行前置代理。因为GFW没有私钥，只能通过SNI和IP判断你要访问的网站，而假的SNI就能欺骗GFW。但服务器本身有私钥，解开后，服务器是通过HTTP请求头判断你要访问哪个网站的。（但注意，特殊的比如虚拟主机、Cloudflare免费版等能在一个IP上部署多个证书的，是一定要SNI的，否则会出错。这种唯一的绕过办法就是ESNI，如果有空的话，以后再讲）因此可以通过这种方式绕过GFW的SNI阻断。</p>
+<h2 id="重度黑洞级别"><a href="#重度黑洞级别" class="headerlink" title="重度黑洞级别"></a>重度黑洞级别</h2><p>GFW针对特定的IP段直接进行路由黑洞处理（BGP路由劫持的最高形式）。</p>
+<p>因为 BGP 是基于互连网络真实表述它们拥有的 IP 地址这一事实，所以 BGP 劫持几乎是<strong>无法停止</strong>的。</p>
+<h3 id="路由劫持"><a href="#路由劫持" class="headerlink" title="路由劫持"></a>路由劫持</h3><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2233355">什么是 BGP 劫持？-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+<p><img src="/../images/42.png" alt="路由劫持"></p>
+<h3 id="路由黑洞"><a href="#路由黑洞" class="headerlink" title="路由黑洞"></a>路由黑洞</h3><p>一条路由无论是静态还是动态，都需要关联到一个出接口，在众多的出接口中，有一种接口非常特殊，即Null（无效）接口，这种类型的接口只有一个编号0，类似（交换机、路由器）的出接口Interface g或e 0&#x2F;0&#x2F;0; Null0是系统保留的逻辑接口，当转发网络设备在转发某些数据包时，如果使用出接口为Null0的路由，那么这些报文会被直接丢弃，就像直接丢进一个黑洞里，永远无法到达，因此出接口为Null0的路由被称为黑洞路由。</p>
+<p><img src="/../images/43.png" alt="路由黑洞"></p>
+<p>到了这一级别的最强黑名单，黑上黑级别的，那甚至不需要污染域名和sni了，根本连不上！（dns污染也经常是将被污染的域名直接指向这一类IP以达到污染的目的）。当然，这种方法封禁是最彻底的，成本也是最高的。需要在路由器上设置跳过路由的自动学习，手动添加黑名单IP段、出口。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>使用科学上网工具代理（代理的IP需要不在黑名单内，且可以访问目标IP）</p>
+<h1 id="使用工具绕过SNI阻断"><a href="#使用工具绕过SNI阻断" class="headerlink" title="使用工具绕过SNI阻断"></a>使用工具绕过SNI阻断</h1><h2 id="下载和运行URenko-x2F-Accesser"><a href="#下载和运行URenko-x2F-Accesser" class="headerlink" title="下载和运行URenko&#x2F;Accesser:"></a>下载和运行URenko&#x2F;Accesser:</h2><p><a target="_blank" rel="noopener" href="https://github.com/URenko/Accesser">URenko&#x2F;Accesser: 🌏一个解决SNI RST导致维基百科、Pixiv等站点无法访问的工具 | A tool for solving SNI RST (github.com)</a></p>
+<p>需要先安装Python3.10及以上更高版本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install -U accesser[doh,doq]</span><br></pre></td></tr></table></figure>
+
+<p>如果我们不需要 DNS-over-HTTPS 和 DNS-over-QUIC，则可以不用带<code>[doh,doq]</code>。</p>
+<p>然后通过如下命令启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accesser</span><br></pre></td></tr></table></figure>
+
+<p>对于Windows系统，默认情况下（没有指定<code>--notsetproxy</code>）会设置PAC代理为<code>http://localhost:7654/pac/?t=&lt;随机数&gt;</code>，如果没有可以手动设置。</p>
+<p>此外，对于Windows系统，默认情况下（没有指定<code>--notimportca</code>）会自动导入证书至系统（第一次运行命令会弹框询问，选择是），如果没有可以手动导入，请看<a target="_blank" rel="noopener" href="https://github.com/URenko/Accesser/wiki/FAQ#q-windows%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E7%BD%91%E7%AB%99%E5%87%BA%E7%8E%B0%E8%AF%81%E4%B9%A6%E9%94%99%E8%AF%AF%E6%82%A8%E7%9A%84%E8%BF%9E%E6%8E%A5%E4%B8%8D%E6%98%AF%E7%A7%81%E5%AF%86%E8%BF%9E%E6%8E%A5neterr_cert_invalid%E4%B9%8B%E7%B1%BB%E7%9A%84%E6%80%8E%E4%B9%88%E5%8A%9E%E8%AF%81%E4%B9%A6%E5%AF%BC%E5%85%A5%E9%94%99%E8%AF%AF%E6%80%8E%E4%B9%88%E5%8A%9E%E5%A6%82%E4%BD%95%E5%8D%B8%E8%BD%BD%E8%AF%81%E4%B9%A6">这里</a>。</p>
+<p>支持的站点列表：</p>
+<h2 id="编辑配置文件"><a href="#编辑配置文件" class="headerlink" title="编辑配置文件"></a>编辑配置文件</h2><p>编辑命令执行路径下的config.toml</p>
+<p>我们一般只需要修改DNS部分即可，当然，如果你没有部署无污染的DNS服务器，或者说它预置的DNS服务器你（有其一）都可以访问也是不需要修改的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">nameserver = [</span><br><span class="line">  #&quot;https://185.222.222.222/dns-query&quot;,# https://host|IP[:port]/path # DNS-over-HTTPS (DoH)</span><br><span class="line">  #&quot;https://45.11.45.11/dns-query&quot;,</span><br><span class="line">  #&quot;https://149.112.112.112/dns-query&quot;,</span><br><span class="line">  #&quot;https://149.112.112.10/dns-query&quot;,</span><br><span class="line">  #&quot;tls://149.112.112.112&quot;,            # tls://host|IP[:port]  # DNS-overTLS (DoT)</span><br><span class="line">  #&quot;tls://149.112.112.10&quot;,</span><br><span class="line">  #&quot;tls://dot.sb&quot;,</span><br><span class="line">  # &quot;quic://dns.adguard-dns.com&quot;,     # quic://host|IP[:port] # DNS-over-QUIC (DoQ)</span><br><span class="line">  &quot;192.168.31.53&quot;                       # host|IP[:port]        # 传统 UDP DNS | traditional UDP DNS</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>因为我的内网有一台安全的DNS服务器，IP是192.168.31.53，所以这里我就把其它的dns全部注释了，使用内网dns服务器加快查询速度</p>
+<p><img src="/../images/45.png" alt="AdGHome"></p>
+<p><img src="/../images/46.png" alt="SafeDNS"></p>
+<p>保存设置，重启服务 Enjoy it！</p>
+<h3 id="附：在手机上使用："><a href="#附：在手机上使用：" class="headerlink" title="附：在手机上使用："></a>附：在手机上使用：</h3><p>确保手机与服务器同属于一个局域网。</p>
+<p>编辑命令执行路径下的config.toml</p>
+<p>找到[server]的address，改为</p>
+<p>address &#x3D; “0.0.0.0”</p>
+<p>将pac_host &#x3D; “127.0.0.1”设置为代理的局域网ip地址。</p>
+<p>在手机上的WiFi进行如下设置：</p>
+<p><img src="/../images/49.png" alt="image"></p>
+<h1 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h1><p><img src="/../images/47.png" alt="image"></p>
+<p><img src="/../images/48.png" alt="image"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/network/">network</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
