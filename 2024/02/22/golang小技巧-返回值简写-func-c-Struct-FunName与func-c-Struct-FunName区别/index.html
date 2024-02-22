@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="本文介绍golang中的返回值有一个语法糖,可以帮助我们减少代码量;
+1func loadConfigYaml(f string) (defaultConfig yamlConfig)
+
+同时还介绍func (c *Struct)FunName与func (c Struct)FunName区别">
+  
+
+  
+  
+  <meta name="keywords" content="golang">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/02/22/golang小技巧-返回值简写-func-c-Struct-FunName与func-c-Struct-FunName区别/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-02-22T09:13:38.000Z">
+          2024-02-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文介绍golang中的返回值有一个语法糖,可以帮助我们减少代码量;</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadConfigYaml</span><span class="params">(f <span class="type">string</span>)</span></span> (defaultConfig yamlConfig)</span><br></pre></td></tr></table></figure>
+
+<p>同时还介绍func (c *Struct)FunName与func (c Struct)FunName区别</p>
+<span id="more"></span>
+
+<h1 id="golang返回值变量"><a href="#golang返回值变量" class="headerlink" title="golang返回值变量:"></a>golang返回值变量:</h1><p>golang可以将欲返回的变量值写在函数末尾,并作为一个作用域为函数体内的变量</p>
+<p>例如:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadConfigYaml</span><span class="params">(f <span class="type">string</span>)</span></span> (defaultConfig yamlConfig) &#123;</span><br><span class="line">    file, err := os.Open(f)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">       fmt.Println(<span class="string">&quot;Error opening file:&quot;</span>, err)</span><br><span class="line">       <span class="keyword">return</span> yamlConfig&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">defer</span> file.Close()</span><br><span class="line">    decoder := yaml.NewDecoder(file)</span><br><span class="line">    err = decoder.Decode(&amp;defaultConfig)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时,我们在函数的末尾使用return时可以不带变量名(返回的值).</p>
+<p>这是常规写法,也是大多数编程语言的思维 :定义一个返回内容的变量,赋值后返回</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadConfigYaml</span><span class="params">(f <span class="type">string</span>)</span></span> yamlConfig &#123;</span><br><span class="line">    <span class="keyword">var</span> defaultConfig yamlConfig</span><br><span class="line">    file, err := os.Open(f)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">       fmt.Println(<span class="string">&quot;Error opening file:&quot;</span>, err)</span><br><span class="line">        <span class="keyword">return</span> yamlConfig&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">defer</span> file.Close()</span><br><span class="line">    decoder := yaml.NewDecoder(file)</span><br><span class="line">    err = decoder.Decode(&amp;defaultConfig)</span><br><span class="line">    <span class="keyword">return</span> defaultConfig</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="func-后接的括号里带-与不带-的区别"><a href="#func-后接的括号里带-与不带-的区别" class="headerlink" title="func 后接的括号里带*与不带*的区别"></a>func 后接的括号里带*与不带*的区别</h1><p>在golang中,func 后接一个括号代表是这个结构体(接口)的方法,类似于C++的 classA::func(string a);</p>
+<p>即func (b className)func(a string)&lt;&#x3D;&#x3D;&gt;classA::func(string a);</p>
+<p>其中golang代码中的b指代这个结构体对象,类似于Python中的self,c++&#x2F;java的this</p>
+<p>带*表示传递这个对象中的一切通过指针传递,最常用的特性就是可以修改值;不带*表示使用值传递方式,<strong>如果要修改结构体中属性的值,则不会生效.</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> myStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s myStruct)</span></span> setA1(a <span class="type">string</span>) &#123;</span><br><span class="line">	s.a = a</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s myStruct)</span></span> readA1() &#123;</span><br><span class="line">	<span class="built_in">println</span>(s.a)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *myStruct)</span></span> setA2(a <span class="type">string</span>) &#123;</span><br><span class="line">	s.a = a</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *myStruct)</span></span> readA2() &#123;</span><br><span class="line">	<span class="built_in">println</span>(s.a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s := myStruct&#123;&#125;</span><br><span class="line">    s.a = <span class="string">&quot;dddd&quot;</span></span><br><span class="line">	s.setA1(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line">	s.readA1() <span class="comment">//将不会输出 hello , 而是输出dddd</span></span><br><span class="line">	s.setA2(<span class="string">&quot;hello2&quot;</span>)</span><br><span class="line">	s.readA2() <span class="comment">//输出 hello2</span></span><br><span class="line">	s.readA1() <span class="comment">//输出 hello2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>执行代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ go run main.go</span><br><span class="line">dddd</span><br><span class="line">hello2</span><br><span class="line">hello2</span><br></pre></td></tr></table></figure>
+
+<p>在go中,并不推荐同时使用func (s myStruct) 与func (s *myStruct),这两种选其一即可.</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/golang/">golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2024 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
