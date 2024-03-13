@@ -55,6 +55,62 @@
 
   
     
+    <h3 class="article-title"><a href="/2024/03/13/本地Web应用-实现文件-目录选择器/"><span>本地Web应用-实现文件/目录选择器-获取文件完整路径</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/03/13/本地Web应用-实现文件-目录选择器/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-03-13T14:34:07.000Z">
+          2024-03-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p> 有时候我们需要需要实现通过浏览器选择文件获取文件信息而不上传文件, 这个时候JavaScript的内置api就足以完成需求. 但是,如果我们需要获取到文件的完整路径, 那么对不起, 由于为了安全避免xss攻击, 现代的浏览器仅能获取到一个虚假的路径或者根本无法获取(IE10之前的浏览器可以获取到完整路径).</p>
+<p>如果我们是本地Web应用, 这个问题就可以得到解决.解决方案有Electron封装,或者提供一个运行在本地的Agent用于获取文件路径,再由前端选择文件提交至 Agent或后端, 如果选择前者,再由Agent将路径间接传递至后端.</p>
+<p>本文分享使用Go作为后端,Vue作为前端的,一起运行在本地的Web应用解决方案.</p>
+<p>(附完整代码)</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/vue/">vue</a><a href="/tags/golang/">golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2024/02/22/golang小技巧-返回值简写-func-c-Struct-FunName与func-c-Struct-FunName区别/"><span>golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别</span></a></h3>
     
   
@@ -523,60 +579,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/vue/">vue</a><a href="/tags/web/">web</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/"><span>ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/" rel="bookmark">
-        <time class="entry-date published" datetime="2023-05-06T17:10:39.000Z">
-          2023-05-07
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性</p>
-<p>康耐信N5105 0x0步进第一版i225-v3 </p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PVE/">PVE</a><a href="/tags/N5105/">N5105</a>
     </span>
     
 
