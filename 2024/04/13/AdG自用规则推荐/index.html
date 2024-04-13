@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>AdG自用规则推荐 | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="本人自用的AdG规则.bak
+了解什么是AdG:AdGuard Home 中文指南 - TimochanのBlog">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="AdG自用规则推荐"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>AdG自用规则推荐</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/04/13/AdG自用规则推荐/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-04-13T04:19:03.000Z">
+          2024-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本人自用的AdG规则.bak</p>
+<p>了解什么是AdG:<a target="_blank" rel="noopener" href="https://www.timochan.cn/posts/jc/adguard_home_configuration_guide#%E5%89%8D%E8%A8%80">AdGuard Home 中文指南 - TimochanのBlog</a></p>
+<span id="more"></span>
+
+<p>本人在Timo的dns实践基础上补充了一些规则,优化一些国内网站的访问速度</p>
+<h1 id="DNS服务器设置"><a href="#DNS服务器设置" class="headerlink" title="DNS服务器设置"></a>DNS服务器设置</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br></pre></td><td class="code"><pre><span class="line">#国外DNS-主要用于解决DNS污染</span><br><span class="line">#谷歌DNS-对全球的IP-ECS支持比较全,CDN命中率挺高的,国内也不错 推荐使用8.8.4.4</span><br><span class="line">#移动网使用这个非常快 海外快</span><br><span class="line">tls://8.8.4.4</span><br><span class="line">tls://[2001:4860:4860::8844]</span><br><span class="line"></span><br><span class="line">#IBM公共DNS 9.9.9.10没有广告过滤,如果需要使用广告过滤,用默认的9.9.9.9</span><br><span class="line">#联通非常快 海外快 国内的ECS支持不太行</span><br><span class="line">tls://9.9.9.10 </span><br><span class="line"></span><br><span class="line">#AdG 官方DNS-无广告过滤规则 国内的ECS支持不行</span><br><span class="line">#quic://unfiltered.adguard-dns.com</span><br><span class="line"></span><br><span class="line">#欧盟公共DNS zero.dns0.eu 国内的ECS支持不行</span><br><span class="line">#tls://185.253.5.9</span><br><span class="line"></span><br><span class="line">#俄罗斯Yandex公共DNS 三家都很慢 国内的ECS支持不行</span><br><span class="line">#https://77.88.8.8/dns-query</span><br><span class="line"></span><br><span class="line">#OpenDNS-对于国内的ECS支持不太行</span><br><span class="line">#联通,移动,海外都非常快</span><br><span class="line">#https://208.67.222.123/dns-query </span><br><span class="line"></span><br><span class="line">#CloudflareDNS--对于国内的ECS支持不太行,而且三大家都慢,在海外快的飞起</span><br><span class="line">#https://1.1.1.1/dns-query</span><br><span class="line">#https://1.0.0.1/dns-query</span><br><span class="line"></span><br><span class="line">#加州 Vultr搬瓦工-YesDNS-三家速度适中 国内的ECS支持不行</span><br><span class="line">#https://dns.yesdns.net/dns-query</span><br><span class="line"></span><br><span class="line">#nextDNS 全球多节点 延迟十分优秀 国内的ECS支持不太行</span><br><span class="line">#tls://dns.nextdns.io</span><br><span class="line"></span><br><span class="line">#丹麦UncensoredDNS公共DNS 非常慢 国内的ECS支持不行</span><br><span class="line">#https://anycast.uncensoreddns.org/dns-query</span><br><span class="line"></span><br><span class="line">#PCDN</span><br><span class="line">#[/dataflow.biliapi.com/]tls://dot.pub</span><br><span class="line">#[/xycdn.com/]quic://dns.alidns.com</span><br><span class="line">#[/yfcdn.net/]quic://dns.alidns.com</span><br><span class="line">#[/yfcloud.com/]quic://dns.alidns.com</span><br><span class="line">#[/ksyungslb.com/]quic://dns.alidns.com</span><br><span class="line">#[/onethingpcs.com/]tls://dot.pub</span><br><span class="line">#[/yfp2p.net/]quic://dns.alidns.com</span><br><span class="line">#[/biliapi.net/]quic://dns.alidns.com</span><br><span class="line">#[/api.myip.la/]quic://dns.alidns.com</span><br><span class="line">#[/api.ip.sb/]quic://dns.alidns.com</span><br><span class="line">#[/ipapi.co/]quic://dns.alidns.com</span><br><span class="line">#[/myip.ipip.net/]quic://dns.alidns.com</span><br><span class="line">#[/ip-api.com/]quic://dns.alidns.com</span><br><span class="line">#[/kwaicdn.com/]tls://dot.pub</span><br><span class="line">#[/shifen.com/]quic://dns.alidns.com</span><br><span class="line">#[/cdnnode.cn/]tls://dot.pub</span><br><span class="line">#[/tiptime-api.com/]tls://dot.pub</span><br><span class="line">#[/ksyun.com/]quic://dns.alidns.com</span><br><span class="line"></span><br><span class="line">#大学生的挚爱</span><br><span class="line">[/chaoxing.com/]tls://dot.pub</span><br><span class="line">[/zhihuishu.com/]tls://dot.pub</span><br><span class="line"></span><br><span class="line">#修复谷歌存在国内节点时解析异常</span><br><span class="line">[/dl.google.com/]quic://dns.alidns.com</span><br><span class="line"></span><br><span class="line">#国内常用网站</span><br><span class="line">[/nowcoder.com/]quic://dns.alidns.com</span><br><span class="line">[/zhipin.com/]quic://dns.alidns.com</span><br><span class="line">[/microsoft.com/]quic://dns.alidns.com</span><br><span class="line">[/iqiyi.com/]quic://dns.alidns.com</span><br><span class="line">[/www.tmall.com/]quic://dns.alidns.com</span><br><span class="line">[/kuaishou.com/]quic://dns.alidns.com</span><br><span class="line">[/tiptime-api.com/]quic://dns.alidns.com</span><br><span class="line">[/kwaicdn.com/]quic://dns.alidns.com</span><br><span class="line">[/baidupcs.com/]quic://dns.alidns.com</span><br><span class="line">[/alidns.aliyuncs.com/]quic://dns.alidns.com</span><br><span class="line">[/cn/]quic://dns.alidns.com</span><br><span class="line">[/cn/]tls://dot.pub</span><br><span class="line">[/bing.com/]quic://dns.alidns.com</span><br><span class="line">[/zhihu.com/]quic://dns.alidns.com</span><br><span class="line">[/qcloud.com/]tls://dot.pub</span><br><span class="line">[/samsungcloudcn.com/]tls://dot.pub</span><br><span class="line">[/aliyun.com/]quic://dns.alidns.com</span><br><span class="line">[/ithome.com/]quic://dns.alidns.com</span><br><span class="line">[/netease.com/]quic://dns.alidns.com</span><br><span class="line">[/zhimg.com/]quic://dns.alidns.com</span><br><span class="line">[/microsoftonline.com/]quic://dns.alidns.com</span><br><span class="line">[/oppo.com/]quic://dns.alidns.com</span><br><span class="line">[/coloros.com/]quic://dns.alidns.com</span><br><span class="line">[/vivo.com/]quic://dns.alidns.com</span><br><span class="line">[/suning.com/]quic://dns.alidns.com</span><br><span class="line">[/hupu.com/]quic://dns.alidns.com</span><br><span class="line">[/sohu.com/]quic://dns.alidns.com</span><br><span class="line">[/1688.com/]quic://dns.alidns.com</span><br><span class="line">[/huaweicloud.com/]quic://dns.alidns.com</span><br><span class="line">[/meizu.com/]quic://dns.alidns.com</span><br><span class="line">[/huawei.com/]quic://dns.alidns.com</span><br><span class="line">[/weibo.com/]quic://dns.alidns.com</span><br><span class="line">[/douyu.com/]quic://dns.alidns.com</span><br><span class="line">[/qidian.com/]quic://dns.alidns.com</span><br><span class="line">[/ixigua.com/]quic://dns.alidns.com</span><br><span class="line">[/uhabo.com/]quic://dns.alidns.com</span><br><span class="line">[/miui.com/]quic://dns.alidns.com</span><br><span class="line">[/youdao.com/]quic://dns.alidns.com</span><br><span class="line">[/gvt2.com/]quic://dns.alidns.com</span><br><span class="line">[/csdn.net/]quic://dns.alidns.com</span><br><span class="line">[/dbankcloud.cn/dbankcloud.ru/dbankcloud.com/]quic://dns.alidns.com</span><br><span class="line">[/quark.cn/]quic://dns.alidns.com</span><br><span class="line">[/bytefcdn.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent-cloud.cn/]quic://dns.alidns.com</span><br><span class="line">[/qq.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent-cloud.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcs.cn/tencentcs.com/]quic://dns.alidns.com</span><br><span class="line">[/qq.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent.com/tencent.cn/]quic://dns.alidns.com</span><br><span class="line">[/sogou.com/]quic://dns.alidns.com</span><br><span class="line">[/wpscdn.cn/]quic://dns.alidns.com</span><br><span class="line">[/xunlei.com/]quic://dns.alidns.com</span><br><span class="line">[/mi.com/]quic://dns.alidns.com</span><br><span class="line">[/miwifi.com/]quic://dns.alidns.com</span><br><span class="line">[/bdurl.net/]quic://dns.alidns.com</span><br><span class="line">[/amemv.com/]quic://dns.alidns.com</span><br><span class="line">[/toutiao.com/]quic://dns.alidns.com</span><br><span class="line">[/zijieapi.com/]quic://dns.alidns.com</span><br><span class="line">[/douyin.com/]quic://dns.alidns.com</span><br><span class="line">[/douyincdn.com/]quic://dns.alidns.com</span><br><span class="line">[/douyinec.com/]quic://dns.alidns.com</span><br><span class="line">[/douyinliving.com/]quic://dns.alidns.com</span><br><span class="line">[/douyinpic.com/]quic://dns.alidns.com</span><br><span class="line">[/douyinstatic.com/]quic://dns.alidns.com</span><br><span class="line">[/douyinvideo.net/]quic://dns.alidns.com</span><br><span class="line">[/douyinvod.click/]quic://dns.alidns.com</span><br><span class="line">[/douyinvod.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent-blackboard.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent-cloud.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent-cloud.net/]quic://dns.alidns.com</span><br><span class="line">[/tencent-gf.com/]quic://dns.alidns.com</span><br><span class="line">[/tencent.com.hk/]quic://dns.alidns.com</span><br><span class="line">[/tencent.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentads.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcdb.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentclb.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcloud.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcloudapi.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcloudbase.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentcs.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentdba.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentdevices.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentipv6.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentlog.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentmeeting.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentmind.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentmusic.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentsuite.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentwm.com/]quic://dns.alidns.com</span><br><span class="line">[/tencentyun.com/]quic://dns.alidns.com</span><br><span class="line">[/tqqa.com/]quic://dns.alidns.com</span><br><span class="line">[/tqqyun.com/]quic://dns.alidns.com</span><br><span class="line">[/qpic.cn/]quic://dns.alidns.com</span><br><span class="line">[/qlogo.cn/]quic://dns.alidns.com</span><br><span class="line">[/idouyinvod.com/]quic://dns.alidns.com</span><br><span class="line">[/taobao.com/]quic://dns.alidns.com</span><br><span class="line">[/jd.com/]quic://dns.alidns.com</span><br><span class="line">[/baidu.com/]quic://dns.alidns.com</span><br><span class="line">[/gov.cn/]quic://dns.alidns.com</span><br><span class="line">[/bilibili.com/]quic://dns.alidns.com</span><br><span class="line">[/bilivideo.com/]quic://dns.alidns.com</span><br><span class="line">[/bilivideo.cn/]quic://dns.alidns.com</span><br><span class="line">[/cnki.net/]quic://dns.alidns.com</span><br><span class="line">[/hdslb.com/]quic://dns.alidns.com</span><br><span class="line">[/163.com/]quic://dns.alidns.com</span><br><span class="line">[/126.net/]quic://dns.alidns.com</span><br><span class="line">[/huya.com/]quic://dns.alidns.com</span><br><span class="line">[/xycdn.com/]tls://dot.pub</span><br><span class="line">[/yfcdn.net/]tls://dot.pub</span><br><span class="line">[/microsoft.com/]tls://dot.pub</span><br><span class="line">[/iqiyi.com/]tls://dot.pub</span><br><span class="line">[/www.tmall.com/]tls://dot.pub</span><br><span class="line">[/baidupcs.com/]tls://dot.pub</span><br><span class="line">[/aliyun.com/]tls://dot.pub</span><br><span class="line">[/ithome.com/]tls://dot.pub</span><br><span class="line">[/csdn.net/]tls://dot.pub</span><br><span class="line">[/dbankcloud.cn/dbankcloud.ru/dbankcloud.com/]tls://dot.pub</span><br><span class="line">[/quark.cn/]tls://dot.pub</span><br><span class="line">[/bytefcdn.com/]tls://dot.pub</span><br><span class="line">[/tencent-cloud.cn/]tls://dot.pub</span><br><span class="line">[/qq.com/]tls://dot.pub</span><br><span class="line">[/tencent-cloud.com/]tls://dot.pub</span><br><span class="line">[/tencentcs.cn/tencentcs.com/]tls://dot.pub</span><br><span class="line">[/qq.com/]tls://dot.pub</span><br><span class="line">[/tencent.com/tencent.cn/]tls://dot.pub</span><br><span class="line">[/sogou.com/]tls://dot.pub</span><br><span class="line">[/wpscdn.cn/]tls://dot.pub</span><br><span class="line">[/xunlei.com/]tls://dot.pub</span><br><span class="line">[/mi.com/]tls://dot.pub</span><br><span class="line">[/miwifi.com/]tls://dot.pub</span><br><span class="line">[/shifen.com/]tls://dot.pub</span><br><span class="line">[/bdurl.net/]tls://dot.pub</span><br><span class="line">[/amemv.com/]tls://dot.pub</span><br><span class="line">[/toutiao.com/]tls://dot.pub</span><br><span class="line">[/zijieapi.com/]tls://dot.pub</span><br><span class="line">[/douyin.com/]tls://dot.pub</span><br><span class="line">[/douyincdn.com/]tls://dot.pub</span><br><span class="line">[/douyinec.com/]tls://dot.pub</span><br><span class="line">[/douyinliving.com/]tls://dot.pub</span><br><span class="line">[/douyinpic.com/]tls://dot.pub</span><br><span class="line">[/douyinstatic.com/]tls://dot.pub</span><br><span class="line">[/douyinvideo.net/]tls://dot.pub</span><br><span class="line">[/douyinvod.click/]tls://dot.pub</span><br><span class="line">[/douyinvod.com/]tls://dot.pub</span><br><span class="line">[/tencent-blackboard.com/]tls://dot.pub</span><br><span class="line">[/tencent-cloud.com/]tls://dot.pub</span><br><span class="line">[/tencent-cloud.net/]tls://dot.pub</span><br><span class="line">[/tencent-gf.com/]tls://dot.pub</span><br><span class="line">[/tencent.com.hk/]tls://dot.pub</span><br><span class="line">[/tencent.com/]tls://dot.pub</span><br><span class="line">[/tencentads.com/]tls://dot.pub</span><br><span class="line">[/tencentcdb.com/]tls://dot.pub</span><br><span class="line">[/tencentclb.com/]tls://dot.pub</span><br><span class="line">[/tencentcloud.com/]tls://dot.pub</span><br><span class="line">[/tencentcloudapi.com/]tls://dot.pub</span><br><span class="line">[/tencentcloudbase.com/]tls://dot.pub</span><br><span class="line">[/tencentcs.com/]tls://dot.pub</span><br><span class="line">[/tencentdba.com/]tls://dot.pub</span><br><span class="line">[/tencentdevices.com/]tls://dot.pub</span><br><span class="line">[/tencentipv6.com/]tls://dot.pub</span><br><span class="line">[/tencentlog.com/]tls://dot.pub</span><br><span class="line">[/tencentmeeting.com/]tls://dot.pub</span><br><span class="line">[/tencentmind.com/]tls://dot.pub</span><br><span class="line">[/tencentmusic.com/]tls://dot.pub</span><br><span class="line">[/tencentsuite.com/]tls://dot.pub</span><br><span class="line">[/tencentwm.com/]tls://dot.pub</span><br><span class="line">[/tencentyun.com/]tls://dot.pub</span><br><span class="line">[/tqqa.com/]tls://dot.pub</span><br><span class="line">[/tqqyun.com/]tls://dot.pub</span><br><span class="line">[/qpic.cn/]tls://dot.pub</span><br><span class="line">[/qlogo.cn/]tls://dot.pub</span><br><span class="line">[/idouyinvod.com/]tls://dot.pub</span><br><span class="line">[/taobao.com/]tls://dot.pub</span><br><span class="line">[/jd.com/]tls://dot.pub</span><br><span class="line">[/baidu.com/]tls://dot.pub</span><br><span class="line">[/gov.cn/]tls://dot.pub</span><br><span class="line">[/bilibili.com/]tls://dot.pub</span><br><span class="line">[/bilivideo.com/]tls://dot.pub</span><br><span class="line">[/bilivideo.cn/]tls://dot.pub</span><br><span class="line">[/cnki.net/]tls://dot.pub</span><br><span class="line">[/hdslb.com/]tls://dot.pub</span><br><span class="line">[/163.com/]tls://dot.pub</span><br><span class="line">[/126.net/]tls://dot.pub</span><br><span class="line">[/huya.com/]tls://dot.pub</span><br></pre></td></tr></table></figure>
+
+<h1 id="广告过滤设置"><a href="#广告过滤设置" class="headerlink" title="广告过滤设置"></a>广告过滤设置</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">BanCookie:</span><br><span class="line">https://easylist-downloads.adblockplus.org/easyprivacy.txt</span><br><span class="line"></span><br><span class="line">乘风规则:</span><br><span class="line">https://github.com/xinggsf/Adblock-Plus-Rule/raw/master/rule.txt</span><br><span class="line"></span><br><span class="line">EasyListChina:</span><br><span class="line">https://easylist-downloads.adblockplus.org/easylistchina.txt</span><br><span class="line"></span><br><span class="line">AntiAD:</span><br><span class="line">https://anti-ad.net/adguard.txt</span><br><span class="line"></span><br><span class="line">EasyList:</span><br><span class="line">https://anti-ad.net/easylist.txt</span><br><span class="line"></span><br><span class="line">乘风视频:</span><br><span class="line">https://github.com/xinggsf/Adblock-Plus-Rule/raw/master/mv.txt</span><br><span class="line"></span><br><span class="line">大圣净化:</span><br><span class="line">https://github.com/jdlingyu/ad-wars/raw/master/hosts</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2024 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
