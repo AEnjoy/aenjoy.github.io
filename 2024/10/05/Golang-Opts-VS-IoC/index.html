@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Golang Opts VS IoC | Enjoy your life | AEnjoy’s Blog</title>
+
+  
+  <meta name="author" content="AEnjoy">
+  
+
+  
+  <meta name="description" content="在使用Golang设计一套系统的时候,我们通常会涉及到组件加载,依赖等相关问题,进而引申出这样一个问题:Golang更适合使用IoC模式托管对象并进行依赖注入,还是适合使用opts方法加载并依赖对象?
+本文将对这两个进行对比解答,同时附上对应的exampleCode">
+  
+
+  
+  
+  <meta name="keywords" content="golang,ioc">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Golang Opts VS IoC"/>
+
+  <meta property="og:site_name" content="Enjoy your life"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Enjoy your life</a>
+    </h1>
+    <p class="site-description">AEnjoy’s Blog</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Golang Opts VS IoC</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/10/05/Golang-Opts-VS-IoC/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-10-05T19:05:51.000Z">
+          2024-10-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在使用Golang设计一套系统的时候,我们通常会涉及到组件加载,依赖等相关问题,进而引申出这样一个问题:<br>Golang更适合使用IoC模式托管对象并进行依赖注入,还是适合使用opts方法加载并依赖对象?</p>
+<p>本文将对这两个进行对比解答,同时附上对应的exampleCode</p>
+<span id="more"></span>
+
+<h1 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h1><p>IoC （Inversion of control ）控制反转&#x2F;反转控制.<br>它是一种思想, 而不是一个技术实现.</p>
+<p>如果你熟悉Java,你肯定知道IoC和Spring</p>
+<p>它有这几个优点:</p>
+<ul>
+<li><strong>解耦:</strong> 将对象的创建和管理从业务逻辑中分离，降低耦合度，提高代码可测试性。</li>
+<li><strong>灵活:</strong> 可以方便地替换组件，实现热插拔。</li>
+<li><strong>复用:</strong> 可以将对象配置信息集中管理，方便复用。</li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li><strong>复杂性:</strong> 引入了一个额外的抽象层，增加了系统的复杂性。</li>
+<li><strong>学习成本:</strong> 需要学习和掌握 IoC 框架的使用。</li>
+</ul>
+<p>适合场景:</p>
+<ul>
+<li><strong>大型复杂系统:</strong> 需要管理大量的对象和依赖关系。</li>
+<li><strong>高度可配置的系统:</strong> 需要动态地调整系统配置。</li>
+<li><strong>需要进行单元测试的系统:</strong> IoC 可以方便地模拟依赖对象。</li>
+</ul>
+<h2 id="它的实现Example"><a href="#它的实现Example" class="headerlink" title="它的实现Example:"></a>它的实现Example:</h2><p>最简单的,通过map来存储并托管对象,还可以根据Weight来指定加载顺序</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// service.go</span></span><br><span class="line"><span class="keyword">package</span> ioc</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Container <span class="keyword">interface</span> &#123;</span><br><span class="line">	Registry(name <span class="type">string</span>, obj Object)</span><br><span class="line">	Get(name <span class="type">string</span>) any</span><br><span class="line">	Init() <span class="type">error</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Object <span class="keyword">interface</span> &#123;</span><br><span class="line">	Init() <span class="type">error</span></span><br><span class="line">	Weight() <span class="type">uint16</span> <span class="comment">// Add a Weight method to get the weight of the object</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// map.go</span></span><br><span class="line"><span class="keyword">package</span> ioc</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;sort&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> _ Container = (*MapContainer)(<span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> MapContainer <span class="keyword">struct</span> &#123;</span><br><span class="line">	name   <span class="type">string</span></span><br><span class="line">	storge <span class="keyword">map</span>[<span class="type">string</span>]Object</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *MapContainer)</span></span> Registry(name <span class="type">string</span>, obj Object) &#123;</span><br><span class="line">	c.storge[name] = obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *MapContainer)</span></span> Get(name <span class="type">string</span>) any &#123;</span><br><span class="line">	<span class="keyword">return</span> c.storge[name]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *MapContainer)</span></span> Init() <span class="type">error</span> &#123;</span><br><span class="line">	<span class="comment">// Create a slice of object names and weights for sorting</span></span><br><span class="line">	<span class="keyword">type</span> weightedObject <span class="keyword">struct</span> &#123;</span><br><span class="line">		name   <span class="type">string</span></span><br><span class="line">		object Object</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> weightedObjects []weightedObject</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> name, obj := <span class="keyword">range</span> c.storge &#123;</span><br><span class="line">		weightedObjects = <span class="built_in">append</span>(weightedObjects, weightedObject&#123;name: name, object: obj&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Sort by weight (ascending)</span></span><br><span class="line">	sort.Slice(weightedObjects, <span class="function"><span class="keyword">func</span><span class="params">(i, j <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> weightedObjects[i].object.Weight() &lt; weightedObjects[j].object.Weight()</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Initialize objects in the order of their weights</span></span><br><span class="line">	<span class="keyword">for</span> _, wObj := <span class="keyword">range</span> weightedObjects &#123;</span><br><span class="line">		<span class="keyword">if</span> err := wObj.object.Init(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> fmt.Errorf(<span class="string">&quot;%s init error, %s&quot;</span>, wObj.name, err)</span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;[%s] %s init success with weight %d\n&quot;</span>, c.name, wObj.name, wObj.object.Weight())</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那我们该怎么使用呢?</p>
+<p>当然也很简单:</p>
+<p>准备托管对象的Container-Controller:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> ioc</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Controller Container = &amp;MapContainer&#123;</span><br><span class="line">	name:   <span class="string">&quot;controller&quot;</span>,</span><br><span class="line">	storge: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]Object),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>准备一个要托管给IoC的对象(通常是struct,实现了Object接口)</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> controller</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> ControllerImpl <span class="keyword">struct</span> &#123;</span><br><span class="line">    db *gorm.DB</span><br><span class="line">    <span class="comment">// other attribute</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *ControllerImpl)</span></span> Init() <span class="type">error</span> &#123;</span><br><span class="line">    c.db = conf.C().DB.GetDB()</span><br><span class="line">    <span class="keyword">if</span> c.db == <span class="literal">nil</span> &#123;</span><br><span class="line">       <span class="built_in">panic</span>(<span class="string">&quot;db is nil&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *ControllerImpl)</span></span> Weight() <span class="type">uint16</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    ioc.Controller.Registry(<span class="string">&quot;an-object&quot;</span>, &amp;ControllerImpl&#123;&#125;) <span class="comment">// 注册对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在初始化的时候导入这个模块即可</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;example/controller&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ioc.Controller.Get(<span class="string">&quot;an-object&quot;</span>).(controller.ControllerImpl)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Opts"><a href="#Opts" class="headerlink" title="Opts"></a>Opts</h1><p>这是Golang的一种语法糖,可以让我们动态添加参数.</p>
+<p>优点:</p>
+<ul>
+<li><strong>简单直观:</strong> 直接在函数调用时传递配置参数，易于理解。</li>
+<li><strong>灵活:</strong> 可以根据需要选择传递哪些参数。</li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li><strong>耦合度高:</strong> 配置参数与函数调用紧密耦合，不利于代码复用。</li>
+<li><strong>可维护性差:</strong> 参数过多时，函数签名会变得很长，难以维护。</li>
+</ul>
+<p>适合场景:</p>
+<ul>
+<li><strong>小型简单系统:</strong> 对象数量较少，依赖关系不复杂。</li>
+<li><strong>配置参数较少:</strong> 函数的参数列表比较短。</li>
+<li><strong>不需要高度可配置的系统:</strong> 配置信息相对固定。</li>
+</ul>
+<p>你会在Kubernetes,grpc等库中看到</p>
+<p>如:</p>
+<p><img src="https://static.iotroom.top/b2fa1c71-291c-4658-9439-db16ea821135.png"></p>
+<p>我们可以观察到,入口点使用了 … 表示不定长参数,而里面的函数返回是这个不定长参数的选项</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// grpc server.go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewServer</span><span class="params">(opt ...ServerOption)</span></span> *Server &#123;</span><br><span class="line">	opts := defaultServerOptions</span><br><span class="line">	<span class="keyword">for</span> _, o := <span class="keyword">range</span> globalServerOptions &#123;</span><br><span class="line">		o.apply(&amp;opts)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, o := <span class="keyword">range</span> opt &#123;</span><br><span class="line">		o.apply(&amp;opts)</span><br><span class="line">	&#125;</span><br><span class="line">	s := &amp;Server&#123;</span><br><span class="line">		lis:      <span class="built_in">make</span>(<span class="keyword">map</span>[net.Listener]<span class="type">bool</span>),</span><br><span class="line">		opts:     opts,</span><br><span class="line">		conns:    <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">map</span>[transport.ServerTransport]<span class="type">bool</span>),</span><br><span class="line">		services: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]*serviceInfo),</span><br><span class="line">		quit:     grpcsync.NewEvent(),</span><br><span class="line">		done:     grpcsync.NewEvent(),</span><br><span class="line">		channelz: channelz.RegisterServer(<span class="string">&quot;&quot;</span>),</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>opts就被应用成功了</p>
+<p>看不懂? 还有更简单的:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.go</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;example/core&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	app := core.NewApp(</span><br><span class="line">		core.SetHostName(hostName),</span><br><span class="line">		core.SetPort(listenPort),</span><br><span class="line">	)</span><br><span class="line">    app.Run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// example/core/app.go</span></span><br><span class="line"><span class="keyword">type</span> app <span class="keyword">struct</span> &#123;</span><br><span class="line">	hostName <span class="type">string</span></span><br><span class="line">	port     <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewApp</span><span class="params">(opts ...<span class="keyword">func</span>(*app)</span></span> <span class="type">error</span>) *app &#123;</span><br><span class="line">	<span class="keyword">var</span> server = <span class="built_in">new</span>(app)</span><br><span class="line">	<span class="keyword">for</span> _, opt := <span class="keyword">range</span> opts &#123;</span><br><span class="line">		<span class="keyword">if</span> err := opt(server); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			logger.Fatalf(<span class="string">&quot;Failed to apply option: %v&quot;</span>, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> server</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SetHostName</span><span class="params">(hostName <span class="type">string</span>)</span></span> <span class="function"><span class="keyword">func</span><span class="params">(*app)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(s *app)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">		s.hostName = hostName</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SetPort</span><span class="params">(port <span class="type">string</span>)</span></span> <span class="function"><span class="keyword">func</span><span class="params">(*app)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(s *app)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">		s.port = port</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过opts,我们可以快速应用选项</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/golang/">golang</a><a href="/tags/ioc/">ioc</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2024 AEnjoy
+    
+  </p>
+</footer>
+    
+    
+  </div>
+</div>
+</body>
+</html>
