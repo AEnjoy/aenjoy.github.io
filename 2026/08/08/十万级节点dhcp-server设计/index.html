@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <!-- SEO相关 -->
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="canonical" href="https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/"/>
+  <link rel="canonical" href="https://www.a-enjoy.top/2026/08/08/十万级节点dhcp-server设计/"/>
   <!-- 渲染优化 -->
     <meta http-equiv='x-dns-prefetch-control' content='on' />
       <link rel='dns-prefetch' href='https://unpkg.com'>
@@ -33,20 +33,19 @@
   <!-- feed -->
       <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
   <!-- 页面元数据 -->
-  <title>十万级节点 DHCP Server 设计 - Enjoy your life</title>
+  <title>中心化的，边缘十万级节点 DHCP Server 设计 - Enjoy your life</title>
   <meta name="keywords" content=", 分布式系统,AEnjoy,Hexo,Go,OpenWrt,PVE">
-  <meta desc name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
-在这个量级，传统的单体架构已经无法满足... - AEnjoy - Enjoy your life">
-  <meta name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要">
+  <meta desc name="description" content="最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务... - AEnjoy - Enjoy your life">
+  <meta name="description" content="最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确">
 <meta property="og:type" content="article">
-<meta property="og:title" content="十万级节点 DHCP Server 设计">
-<meta property="og:url" content="https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:title" content="中心化的，边缘十万级节点 DHCP Server 设计">
+<meta property="og:url" content="https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Enjoy your life">
-<meta property="og:description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要">
+<meta property="og:description" content="最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png">
-<meta property="article:published_time" content="2026-08-09T08:42:26.000Z">
-<meta property="article:modified_time" content="2026-08-09T09:09:12.200Z">
+<meta property="article:published_time" content="2026-08-08T08:42:26.000Z">
+<meta property="article:modified_time" content="2026-08-09T10:09:31.413Z">
 <meta property="article:author" content="AEnjoy">
 <meta property="article:tag" content="分布式系统">
 <meta name="twitter:card" content="summary">
@@ -2573,7 +2572,7 @@ document.addEventListener('DOMContentLoaded', function () {
     root: "/",
     debug: "env",
     default: {"avatar":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/avatar/round/3442075.svg","link":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/link/8f277b4ee0ecd.svg","cover":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/cover/76b86c0226ffd.svg","image":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/image/2659360.svg","topic":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png","project":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png","banner":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg","loading":"https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd","image_onerror":"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E"},
-    lastupdate: new Date(1786266561950),
+    lastupdate: new Date(1786270187382),
     scroll_behavior: "smooth",
     cdn: {
       jquery: "https://unpkg.com/jquery@3.7.1/dist/jquery.min.js",
@@ -2641,7 +2640,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/","name":"十万级节点 DHCP Server 设计"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"十万级节点 DHCP Server 设计","description":"最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。\n在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。\n目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。\n整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/","wordCount":363,"datePublished":"2026-08-09T08:42:26.000Z","dateModified":"2026-08-09T09:09:12.200Z","keywords":"分布式系统","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top/2026/08/08/十万级节点dhcp-server设计/","name":"中心化的，边缘十万级节点 DHCP Server 设计"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"中心化的，边缘十万级节点 DHCP Server 设计","description":"最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。\n在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。\n目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。\nPxe server：对于特定mac+来自pxe client的请求，我们还需要修改本机的配置文件（grub）用于实现特定配置(如ubuntu，windows，centos)pxe启动，这又涉及到了文件的并发读写。\n整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/","wordCount":468,"datePublished":"2026-08-08T08:42:26.000Z","dateModified":"2026-08-09T10:09:31.413Z","keywords":"分布式系统","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
   <!-- import head_end begin -->
   <!-- import head_end end -->
   <!-- Custom Files headEnd begin-->
@@ -2956,13 +2955,13 @@ document.addEventListener('DOMContentLoaded', function () {
 <div id="l_main" class=''>
   <article itemscope itemtype="http://schema.org/Article" class="article post white-box reveal md shadow floatable blur article-type-post" id="post" itemscope itemprop="blogPost">
   <!-- 结构化数据：统一解码永久链接 -->
-  <link itemprop="mainEntityOfPage" href="https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/">
+  <link itemprop="mainEntityOfPage" href="https://www.a-enjoy.top/2026/08/08/十万级节点dhcp-server设计/">
   <!-- 结构化数据：发布者信息（隐藏） -->
   <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="Enjoy your life">
   </span>
   <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="name" content="十万级节点 DHCP Server 设计">
+    <meta itemprop="name" content="中心化的，边缘十万级节点 DHCP Server 设计">
     <meta itemprop="description" content="记录技术、折腾与生活。">
   </span>
   <!-- 文章顶部元信息：标题、作者、日期等（复用子模板） -->
@@ -2975,7 +2974,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
       <h1 class="title allow-select" itemprop="name headline">
-        十万级节点 DHCP Server 设计
+        中心化的，边缘十万级节点 DHCP Server 设计
       </h1>
     
     
@@ -2999,10 +2998,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
-          <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2026-08-09T16:42:26+08:00">
+          <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2026-08-08T16:42:26+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2026年8月9日</p>
+    <p>发布于：2026年8月8日</p>
   </a>
 </div>
 
@@ -3027,9 +3026,10 @@ document.addEventListener('DOMContentLoaded', function () {
   <div id="layoutHelper-page-plugins"></div>
   <!-- 文章核心内容区 -->
   <div id="post-body" itemprop="articleBody">
-    <p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
-<p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p>
+    <p>最近运维同事提出了一个需求：<br>在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；<br>在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
+<p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。</p>
 <p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p>
+<p>Pxe server：对于特定mac+来自pxe client的请求，我们还需要修改本机的配置文件（grub）用于实现特定配置(如ubuntu，windows，centos)pxe启动，这又涉及到了文件的并发读写。</p>
 <p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p>
 <span id="more"></span>
 
@@ -3074,8 +3074,27 @@ document.addEventListener('DOMContentLoaded', function () {
 <p>机房集群：每个机房内可部署多个DHCP Server Agent实例，形成高可用集群。所有Agent均以客户端身份与中心建立长连接。</p>
 <h2 id="需求核心策略"><a href="#需求核心策略" class="headerlink" title="需求核心策略"></a>需求核心策略</h2><p>在接到一个需求时，我们首先要想的是这个需求的目的是什么：很明显，各业务节点都需要从dhcp server获取IP地址用于上网(当前，<br>有的节点在系统上配置了静态ip，但绝大多数仍然需要动态分配，无论是mac-ip静态绑定还是从地址池中随机分配，都是为了让节点能够上网)。</p>
 <p>那很显然，系统要是崩了（含超时、故障等），节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p>
-<p>如果ip分配冲突了，那么节点受路由，arp策略自然也无法上网了，这就是我们要解决的第二个核心问题 -&gt; 一致性问题。</p>
+<p>如果ip分配冲突了，那么节点受路由，arp策略自然也无法上网了。<br>这个问题会出现的时机：agent与配置中心配置版本不一致、本地dhcp ippool分配逻辑错误，这就是我们要解决的第二个核心问题 -&gt; 配置一致性问题（边缘节点与配置中心）。</p>
+<p>Grub配置文件读写竞态：有的节点正在开机-&gt;读取grub配置；此时若云端下发其它节点的pxe配置 -&gt; 并发读写问题。</p>
+<p>约束点：配置都放在配置中心，所有的dhcp server agent都从配置中心拉取配置，这基本能够保证一致性，不需要担心传统分布式系统去中心化共识带来的一系列问题，<br>在纯分布式架构中，各dhcp server节点 需要抢锁选举leader作为事实来源。但在中心-边缘架构中，中央服务是唯一的事实来源。</p>
 <p>性能在这个系统里不是主要的考虑点，毕竟请求是很轻量的，对请求响应耗时要求也不高。</p>
+<hr>
+<p>好，现在我们开始解决 <code>需求核心策略</code> 提到的关注点。</p>
+<h2 id="稳定性问题："><a href="#稳定性问题：" class="headerlink" title="稳定性问题："></a>稳定性问题：</h2><h3 id="服务自动拉起"><a href="#服务自动拉起" class="headerlink" title="服务自动拉起"></a>服务自动拉起</h3><p>这个很好办，搭建一个dhcp 多节点server集群，每节点只负责特定mac段段处理请求，避免冲突。每个节点都可以独立处理请求，互不干扰。<br>dhcpserver交由systemd托管，宿主机开机、服务挂掉可以自动拉起重试。</p>
+<h3 id="断网时网络分区自保"><a href="#断网时网络分区自保" class="headerlink" title="断网时网络分区自保"></a>断网时网络分区自保</h3><p>网络断连时，agent无法与中心服务通信，但仍然可以继续提供dhcp服务。<br>因为agent在本地维护了静态mac-ip映射表和dhcp ip池，能够独立处理请求，但是这有一个期限：在配置中心不可用期间，agent只能基于本地配置提供服务<br>（时长为2分钟），直到配置中心恢复；如若两分钟内配置中心恢复，agent会立即与中心服务重新建立连接，并同步最新配置；若未恢复，则停止服务并重启。</p>
+<p>配置中心：检测到 agent grpc流断开，中央服务立即回收之前授予该 agent 的 ip token池，将其标记为“待分配”，并在 120 秒后授权给其他存活 agent。</p>
+<h2 id="配置一致性问题："><a href="#配置一致性问题：" class="headerlink" title="配置一致性问题："></a>配置一致性问题：</h2><p>配置中心管理 静态macip映射、dhcp ip池、pxe参数，GRUB 模板。由于是双向流，下发必须保证幂等性和顺序性。</p>
+<h3 id="静态策略"><a href="#静态策略" class="headerlink" title="静态策略"></a>静态策略</h3><p>同步机制：agent启动建立连接时，会携带本地配置版本号，<br>中心服务会根据版本号判断是否需要下发最新配置。若版本不一致，中心服务会将最新配置推送给agent，确保所有agent的配置保持一致（配置分为全量下发和增量下发）。</p>
+<p>双向ack：agent收到配置后，会返回ack给中心服务，中心服务在收到ack后才会认为该agent的配置已更新成功。若未收到ack，中心服务会重试下发，直到成功为止<br>（对于网络抖动，下发重复配置，agent 依据配置版本号进行幂等忽略）。</p>
+<p>直至配置同步完成，agent才会正式对外提供dhcp服务，避免配置不一致导致的ip冲突。</p>
+<h3 id="pxe参数与grub"><a href="#pxe参数与grub" class="headerlink" title="pxe参数与grub"></a>pxe参数与grub</h3><p>pxe策略：pxe策略不存储于本地，毕竟数十万节点中，pxe dchp请求是少数，我这里采用的策略是收到请求后再去同步拉取响应。</p>
+<p>当agent收到请求时，会携带请求的mac地址和pxe请求类型（如uefi&#x2F;legacy等），<br>中心服务会根据mac地址查询pxe策略，并将对应的grub配置下发给agent，agent再将配置写入本地grub文件中（需要加文件锁），<br>确保pxe启动的正确性（读修复）。</p>
+<h3 id="动态ip-dhcp地址池分配"><a href="#动态ip-dhcp地址池分配" class="headerlink" title="动态ip dhcp地址池分配"></a>动态ip dhcp地址池分配</h3><p>虽然只有少部分节点是这种分配方式：比如我们有的客户，他们自己管自己虚拟机，没有报mac给我们，但要我们提供分配：即未知mac-&gt;动态分配</p>
+<p>如果每个请求都同步阻塞等待中央服务，性能虽不至于雪崩，但也绝对不高效。我才用的策略是双向流异步批量仲裁。</p>
+<p>在agent启动时，服务端会下发特定ip段（你可以理解为访客段）IP租赁许可证。<code>&#123;Agent_ID: AgentA, 授权IP段: 10.0.1.1~10.0.1.100, 排除: [10.0.1.7], 有效期: 120s, 版本号: 5&#125;</code><br>IP 冲突彻底消失，因为中央服务将 IP 段切成互不重叠的“时间片”分配给不同 Agent。<br>若 Agent A 宕机，其持有的 Token 在 60s 后过期，中央服务可立即将该 IP 段授权给 Agent B（故障转移），且绝不重叠。</p>
+<p>agent 会在 pool 内存中做快速fifo分配，毫秒级响应，然后再上报ip-mac分配.<br>配置中心收到后，会将该分配结果写入数据库，并在下次配置下发时同步给所有agent，确保全局一致性。</p>
+<p>当时设计时询问了AI，AI说还有一种极少数情况：若中央服务发现批量日志中的某个 ip 已被其它 agent 的 token 占用<br>（极少数时钟&#x2F;逻辑 BUG 导致）， 中央服务会立即在 gRPC 流中下发 Force_Revoke(IP, MAC)<br>指令给当前 Agent。Agent 收到后，必须对该 MAC 主动发送 DHCP FORCERENEW 或拒绝续租，强制纠错（最终一致性兜底），不过我感觉这是不必要的。</p>
+<h2 id="并发读写："><a href="#并发读写：" class="headerlink" title="并发读写："></a>并发读写：</h2><p>PXE启动时，grub配置文件的读写是并发的。为了解决这个问题，我们在agent中实现了文件锁机制。<br>这样，就算同时收到dhcp请求、grub请求和配置下发，所有操作依然是串行化的，避免了并发读写导致的配置文件损坏或不一致问题。<br>毕竟，就算pxe dhcp请求再怎么多，量级也不会特别大；而且pxe dhcp请求的bios中设置的超时往往特别长，所以只要加了锁，这个问题的影响是可控的。</p>
 
   </div>
   <!-- 原文链接/阅读更多：仅当page.link存在时显示 -->
@@ -3103,7 +3122,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-08-09T17:09:12+08:00">
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-08-09T18:09:31+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2026年8月9日</p>
@@ -3132,9 +3151,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
-在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=中心化的，边缘十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+Pxe server：对于特定mac+来自pxe client的请求，我们还需要修改本机的配置文件（grub）用于实现特定配置(如ubuntu，windows，centos)pxe启动，这又涉及到了文件的并发读写。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
@@ -3147,9 +3167,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
-在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=中心化的，边缘十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+Pxe server：对于特定mac+来自pxe client的请求，我们还需要修改本机的配置文件（grub）用于实现特定配置(如ubuntu，windows，centos)pxe启动，这又涉及到了文件的并发读写。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
@@ -3162,9 +3183,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
-在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=中心化的，边缘十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近运维同事提出了一个需求：在上层，我们目前有一个中央配置中心（依托于我们内部的CMDB）用于管理DHCP服务器和PXE相关的的配置和策略（运维平台），以便在需要时可以动态调整；在下层一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要兼具PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+Pxe server：对于特定mac+来自pxe client的请求，我们还需要修改本机的配置文件（grub）用于实现特定配置(如ubuntu，windows，centos)pxe启动，这又涉及到了文件的并发读写。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
@@ -3262,7 +3284,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   <div class='content'>
-    <widget class="widget-wrapper recent post-list"><div class="widget-body fs14"><a class="item title" href="/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"><span class="title">十万级节点 DHCP Server 设计</span></a><a class="item title" href="/2025/06/27/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AAnats%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%B3%BB%E7%BB%9F/"><span class="title">设计一个nats消息队列负载均衡系统</span></a><a class="item title" href="/2025/06/25/%E6%88%91%E5%8E%BB%E5%93%AA%E4%BA%86/"><span class="title">我去哪了...</span></a><a class="item title" href="/2024/03/13/%E6%9C%AC%E5%9C%B0Web%E5%BA%94%E7%94%A8-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6-%E7%9B%AE%E5%BD%95%E9%80%89%E6%8B%A9%E5%99%A8/"><span class="title">本地Web应用-实现文件/目录选择器-获取文件完整路径</span></a><a class="item title" href="/2024/02/22/golang%E5%B0%8F%E6%8A%80%E5%B7%A7-%E8%BF%94%E5%9B%9E%E5%80%BC%E7%AE%80%E5%86%99-func-c-Struct-FunName%E4%B8%8Efunc-c-Struct-FunName%E5%8C%BA%E5%88%AB/"><span class="title">golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别</span></a><a class="item title" href="/2024/01/09/%E4%B8%BA%E4%BD%A0%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8Nginx%E6%94%AF%E6%8C%81%E6%9C%80%E6%96%B0%E7%9A%84quic/"><span class="title">为你的服务器Nginx支持最新的quic</span></a><a class="item title" href="/2023/11/12/%E5%88%A9%E7%94%A8%E5%9F%9F%E5%89%8D%E7%BD%AE%E6%8A%80%E6%9C%AF%E7%BB%95%E8%BF%87GFW%E7%9A%84SNI%E9%98%BB%E6%96%AD/"><span class="title">利用域前置技术绕过GFW的SNI阻断</span></a><a class="item title" href="/2023/11/02/axios%E5%8F%91%E9%80%81%E7%AE%80%E5%8D%95POST%E8%AF%B7%E6%B1%82%EF%BC%8CGin%E7%AE%80%E5%8D%95%E5%A4%84%E7%90%86/"><span class="title">axios发送简单POST请求，Gin简单处理</span></a><a class="item title" href="/2023/10/29/%E8%A7%A3%E5%86%B3%E5%89%8D%E7%AB%AFVue3-vite-axios-cookie%E8%B7%A8%E5%9F%9F%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98-%E5%90%8E%E7%AB%AFGo/"><span class="title">解决前端Vue3+vite+axios+cookie跨域报错问题 后端Go+gin</span></a><a class="item title" href="/2023/10/17/rootfs%E7%89%88CatWrt-OpenWrt-%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F%E5%AE%9A%E5%88%B6/"><span class="title">rootfs版CatWrt(OpenWrt)启动镜像定制</span></a></div></widget>
+    <widget class="widget-wrapper recent post-list"><div class="widget-body fs14"><a class="item title" href="/2026/08/08/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"><span class="title">中心化的，边缘十万级节点 DHCP Server 设计</span></a><a class="item title" href="/2025/06/27/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AAnats%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%B3%BB%E7%BB%9F/"><span class="title">设计一个nats消息队列负载均衡系统</span></a><a class="item title" href="/2025/06/25/%E6%88%91%E5%8E%BB%E5%93%AA%E4%BA%86/"><span class="title">我去哪了...</span></a><a class="item title" href="/2024/03/13/%E6%9C%AC%E5%9C%B0Web%E5%BA%94%E7%94%A8-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6-%E7%9B%AE%E5%BD%95%E9%80%89%E6%8B%A9%E5%99%A8/"><span class="title">本地Web应用-实现文件/目录选择器-获取文件完整路径</span></a><a class="item title" href="/2024/02/22/golang%E5%B0%8F%E6%8A%80%E5%B7%A7-%E8%BF%94%E5%9B%9E%E5%80%BC%E7%AE%80%E5%86%99-func-c-Struct-FunName%E4%B8%8Efunc-c-Struct-FunName%E5%8C%BA%E5%88%AB/"><span class="title">golang小技巧:返回值简写,func (c *Struct)FunName与func (c Struct)FunName区别</span></a><a class="item title" href="/2024/01/09/%E4%B8%BA%E4%BD%A0%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8Nginx%E6%94%AF%E6%8C%81%E6%9C%80%E6%96%B0%E7%9A%84quic/"><span class="title">为你的服务器Nginx支持最新的quic</span></a><a class="item title" href="/2023/11/12/%E5%88%A9%E7%94%A8%E5%9F%9F%E5%89%8D%E7%BD%AE%E6%8A%80%E6%9C%AF%E7%BB%95%E8%BF%87GFW%E7%9A%84SNI%E9%98%BB%E6%96%AD/"><span class="title">利用域前置技术绕过GFW的SNI阻断</span></a><a class="item title" href="/2023/11/02/axios%E5%8F%91%E9%80%81%E7%AE%80%E5%8D%95POST%E8%AF%B7%E6%B1%82%EF%BC%8CGin%E7%AE%80%E5%8D%95%E5%A4%84%E7%90%86/"><span class="title">axios发送简单POST请求，Gin简单处理</span></a><a class="item title" href="/2023/10/29/%E8%A7%A3%E5%86%B3%E5%89%8D%E7%AB%AFVue3-vite-axios-cookie%E8%B7%A8%E5%9F%9F%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98-%E5%90%8E%E7%AB%AFGo/"><span class="title">解决前端Vue3+vite+axios+cookie跨域报错问题 后端Go+gin</span></a><a class="item title" href="/2023/10/17/rootfs%E7%89%88CatWrt-OpenWrt-%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F%E5%AE%9A%E5%88%B6/"><span class="title">rootfs版CatWrt(OpenWrt)启动镜像定制</span></a></div></widget>
   </div>
 </section>
 
@@ -3287,7 +3309,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E6%A0%B8%E5%BF%83%E7%AD%96%E7%95%A5"><span class="toc-text">需求核心策略</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E6%A0%B8%E5%BF%83%E7%AD%96%E7%95%A5"><span class="toc-text">需求核心策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-text">稳定性问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E8%87%AA%E5%8A%A8%E6%8B%89%E8%B5%B7"><span class="toc-text">服务自动拉起</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%AD%E7%BD%91%E6%97%B6%E7%BD%91%E7%BB%9C%E5%88%86%E5%8C%BA%E8%87%AA%E4%BF%9D"><span class="toc-text">断网时网络分区自保</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-text">配置一致性问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E7%AD%96%E7%95%A5"><span class="toc-text">静态策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pxe%E5%8F%82%E6%95%B0%E4%B8%8Egrub"><span class="toc-text">pxe参数与grub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81ip-dhcp%E5%9C%B0%E5%9D%80%E6%B1%A0%E5%88%86%E9%85%8D"><span class="toc-text">动态ip dhcp地址池分配</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E8%AF%BB%E5%86%99%EF%BC%9A"><span class="toc-text">并发读写：</span></a></li></ol>
     </div>
   </section>
 
