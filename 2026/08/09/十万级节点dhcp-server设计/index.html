@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <!-- SEO相关 -->
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="canonical" href="https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/"/>
+  <link rel="canonical" href="https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/"/>
   <!-- 渲染优化 -->
     <meta http-equiv='x-dns-prefetch-control' content='on' />
       <link rel='dns-prefetch' href='https://unpkg.com'>
@@ -33,22 +33,22 @@
   <!-- feed -->
       <link rel="alternate" href="/atom.xml" title="Enjoy your life" type="application/atom+xml">
   <!-- 页面元数据 -->
-  <title>ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性 - Enjoy your life</title>
-  <meta name="keywords" content=", PVE,N5105,AEnjoy,Hexo,Go,OpenWrt,PVE">
-  <meta desc name="description" content="换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性 康耐信N5105 0x0步进第一版i225-v3 - AEnjoy - Enjoy your life">
-  <meta name="description" content="换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性 康耐信N5105 0x0步进第一版i225-v3">
+  <title>十万级节点 DHCP Server 设计 - Enjoy your life</title>
+  <meta name="keywords" content=", 分布式系统,AEnjoy,Hexo,Go,OpenWrt,PVE">
+  <meta desc name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要... - AEnjoy - Enjoy your life">
+  <meta name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性">
-<meta property="og:url" content="https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/index.html">
+<meta property="og:title" content="十万级节点 DHCP Server 设计">
+<meta property="og:url" content="https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Enjoy your life">
-<meta property="og:description" content="换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性 康耐信N5105 0x0步进第一版i225-v3">
+<meta property="og:description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png">
-<meta property="article:published_time" content="2023-05-06T17:10:39.000Z">
-<meta property="article:modified_time" content="2023-05-08T15:26:33.000Z">
+<meta property="article:published_time" content="2026-08-09T08:42:26.000Z">
+<meta property="article:modified_time" content="2026-08-09T09:00:38.675Z">
 <meta property="article:author" content="AEnjoy">
-<meta property="article:tag" content="PVE">
-<meta property="article:tag" content="N5105">
+<meta property="article:tag" content="分布式系统">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png">
   <style>
@@ -2641,7 +2641,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top//2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/","name":"ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性","description":"换源加快PVE更新/下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性 康耐信N5105 0x0步进第一版i225-v3","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/","wordCount":81,"datePublished":"2023-05-06T17:10:39.000Z","dateModified":"2023-05-08T15:26:33.000Z","keywords":"PVE,N5105","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/","name":"十万级节点 DHCP Server 设计"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"十万级节点 DHCP Server 设计","description":"最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。\n在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。\n目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。\n整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/","wordCount":320,"datePublished":"2026-08-09T08:42:26.000Z","dateModified":"2026-08-09T09:00:38.675Z","keywords":"分布式系统","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
   <!-- import head_end begin -->
   <!-- import head_end end -->
   <!-- Custom Files headEnd begin-->
@@ -2956,14 +2956,14 @@ document.addEventListener('DOMContentLoaded', function () {
 <div id="l_main" class=''>
   <article itemscope itemtype="http://schema.org/Article" class="article post white-box reveal md shadow floatable blur article-type-post" id="post" itemscope itemprop="blogPost">
   <!-- 结构化数据：统一解码永久链接 -->
-  <link itemprop="mainEntityOfPage" href="https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-换源及更新系统内核以提升整体稳定性/">
+  <link itemprop="mainEntityOfPage" href="https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/">
   <!-- 结构化数据：发布者信息（隐藏） -->
   <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
     <meta itemprop="name" content="Enjoy your life">
   </span>
   <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="name" content="ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性">
-    <meta itemprop="description" content="换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性 康耐信N5105 0x0步进第一版i225-v3">
+    <meta itemprop="name" content="十万级节点 DHCP Server 设计">
+    <meta itemprop="description" content="记录技术、折腾与生活。">
   </span>
   <!-- 文章顶部元信息：标题、作者、日期等（复用子模板） -->
   
@@ -2975,7 +2975,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
       <h1 class="title allow-select" itemprop="name headline">
-        ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性
+        十万级节点 DHCP Server 设计
       </h1>
     
     
@@ -2999,10 +2999,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
-          <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2023-05-07T01:10:39+08:00">
+          <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2026-08-09T16:42:26+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2023年5月7日</p>
+    <p>发布于：2026年8月9日</p>
   </a>
 </div>
 
@@ -3027,183 +3027,53 @@ document.addEventListener('DOMContentLoaded', function () {
   <div id="layoutHelper-page-plugins"></div>
   <!-- 文章核心内容区 -->
   <div id="post-body" itemprop="articleBody">
-    <p>换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性</p>
-<p>康耐信N5105 0x0步进第一版i225-v3</p>
+    <p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
+<p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p>
+<p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p>
+<p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p>
 <span id="more"></span>
 
-<p>本文阅读约12分钟。</p>
-<p>本文最后更新于2023-5-8 23:26:13 版本v2。</p>
-<h1 id="一-N5105机器自身问题带来的噩梦"><a href="#一-N5105机器自身问题带来的噩梦" class="headerlink" title="一.N5105机器自身问题带来的噩梦"></a>一.N5105机器自身问题带来的噩梦</h1><p>我手上有两台N5105工控机，一台是康耐信的，一台是畅网的。</p>
-<p>前者用来跑虚拟化，简直是噩梦，后者裸机单跑<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt">CatWrt</a>(OpenWrt)，两台设备都是<strong>第一版</strong>N5105设备。如果你不使用虚拟化技术，那么本文对你参考意义不大。</p>
-<p>说说我2022年10月左右玩虚拟化遇到的问题吧</p>
-<p>1.Windows Server 2022：网卡直通失败</p>
-<p>2.PVE异常</p>
-<p>后来，实在忍受不了N5105的虚拟化问题，在网上看到大家都抱怨N5105虚拟化稳定性后，我选择了单跑了近半年的OpenWrt。直至看了网友们说的，新版本固件软件都优化了，遂于五一节重新搞起了虚拟化，确实坑变少了许多。最核心的解决方案还是更换硬件，如果不能更换，那用软件精修一下毛坯房也不是不行(</p>
-<blockquote>
-<p>2023-5-8 23:19:37 更新： 目前所有的虚拟机已经稳定运行四天，PCDN也保持了四天在线的记录。</p>
-</blockquote>
-<h2 id="N5105虚拟化的问题"><a href="#N5105虚拟化的问题" class="headerlink" title="N5105虚拟化的问题"></a>N5105虚拟化的问题</h2><p>看了网上很多关于IntelN5105虚拟化踩坑的帖子，无外乎就是这两点：</p>
-<p><strong>虚拟机死机，PCIe设备直通失败</strong></p>
-<p>目前给出的回复大致都是这样的</p>
-<p>第一版N5105工控机存在缺陷（他们往往配置的都是i225-v3网卡，CPU步进0x0），如果是第一代，还是放弃直通吧，真没办法(</p>
-<blockquote>
-<p>问题列表：</p>
-<p>1.虚拟机频繁死机，重启</p>
-<p>2.Host死机，未响应</p>
-<p>3.网卡直通错乱（i226一般没这个问题）</p>
-<p>4.无网络</p>
-<p>5.管理页面打不开</p>
-<p>6.虚拟机无法重启，只能关闭PVE重新启动设备。</p>
-</blockquote>
-<p>在没有更新系统前，我的OpenWrt虚拟机一天死机一次，网心云x86几个小时就死机一次，更新后两者都已经稳定运行两天多了（5-5到5-7）</p>
-<p><img src="/images/5.png" class="lazyload" data-srcset="/images/5.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="CatWrt稳定运行"></p>
-<p>第三版及之后的，由于使用了更新的BIOS固件，更新的CPU，以及改善的i226，解决了很多问题。据chiphell论坛网友们的评论，基本上解决了N5105虚拟化死机和直通异常的问题。</p>
-<h2 id="查看自己的硬件在不在天坑里"><a href="#查看自己的硬件在不在天坑里" class="headerlink" title="查看自己的硬件在不在天坑里"></a>查看自己的硬件在不在天坑里</h2><p>最简单的，在你购买的渠道询问：这是第几版的N5105工控机 如果卖家回答你：第一版的</p>
-<p>那么，恭喜你！中奖了 ！早期天坑版本。</p>
-<p>或者是查看商品信息，一般会写着网卡型号：如果是i255，一般是第一版的；i226一般是较新的，但不好判断，主要还是得手动查看。</p>
-<p>一般来说，只有第一版的N5105是0x0CPU步进的，非常容易辨识。</p>
-<p>在Linux终端里输入如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep stepping</span><br></pre></td></tr></table></figure>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><pre class="mermaid">graph TB
+    subgraph Center[中心管理服务]
+        direction TB
+        A[统一IP地址池管理] --> B[动态/静态IP分配引擎]
+        B --> C[gRPC服务端]
+        D[(IP地址池数据库)]
+        A -.-> D
+    end
 
-<p>如果输出的有</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">stepping        : 0</span><br></pre></td></tr></table></figure>
+    subgraph Room1[机房A]
+        direction LR
+        S1[DHCP Server Agent 1] --> G1[gRPC客户端]
+    end
 
-<p>那么，恭喜你！中奖了 ！早期天坑版本。</p>
-<p>天坑们往往会携带着又一天坑网卡：<strong>I225-V (rev 03)</strong></p>
-<p>在Linux终端里输入如下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lspci | grep <span class="string">&quot;Ethernet controller&quot;</span></span><br></pre></td></tr></table></figure>
+    subgraph Room2[机房B]
+        direction LR
+        S2[DHCP Server Agent 2] --> G2[gRPC客户端]
+    end
 
-<p>如果输出的有</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">03:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">04:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">05:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br><span class="line">06:00.0 Ethernet controller: Intel Corporation Ethernet Controller I225-V (rev 03)</span><br></pre></td></tr></table></figure>
+    subgraph RoomN[机房N]
+        direction LR
+        S3[DHCP Server Agent N] --> G3[gRPC客户端]
+    end
 
-<p>那么，恭喜你！中奖了 ！该网卡不适合虚拟机直通，不过，可以通过创建网桥&#x2F;半虚拟化方式来使用。</p>
-<p>（曲线救国方案：不支持模拟mac设备，不能修改mac地址，不支持在系统内创建桥接）</p>
-<p><strong>总而言之，查看是不是第一版的天坑版本有两种有效的方法：查看CPU步进，询问卖家。</strong></p>
-<h1 id="二-更新PVE以填部分坑"><a href="#二-更新PVE以填部分坑" class="headerlink" title="二.更新PVE以填部分坑"></a>二.更新PVE以填部分坑</h1><p><strong>PVE 是什么</strong></p>
-<p>据 PVE 的<a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Main_Page">官网介绍</a>，PVE 是Proxmox Virtual Environment 的缩写， 是一个完整的开源服务器管理平台，用于企业虚拟化。它将 KVM 管理程序和 Linux 容器 (LXC)、软件定义的存储和网络功能紧密集成在一个平台上。借助基于 Web 的集成用户界面，您可以轻松管理 VM 和容器、集群的高可用性或集成的灾难恢复工具。</p>
-<p>它是基于Debian11的系统，因此，所有的包管理操作同Debian一致，可玩性也十分强大。</p>
-<p><img src="/images/Proxmox-VE-Cluster-Summary.png" class="lazyload" data-srcset="/images/Proxmox-VE-Cluster-Summary.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="File:Proxmox-VE-Cluster-Summary.png"></p>
-<p><strong>PVE下载与安装：</strong></p>
-<p>网上教程较多，本文不再赘述</p>
-<p>在新版的PVE内核中（推荐5.17+），优化了N5105的整体稳定性和核显稳定性，更好用了。</p>
-<h2 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h2><h3 id="一、更换阿里云的源"><a href="#一、更换阿里云的源" class="headerlink" title="一、更换阿里云的源"></a>一、更换阿里云的源</h3><p>在终端中输入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+    C <-->|双向流式gRPC| G1
+    C <-->|双向流式gRPC| G2
+    C <-->|双向流式gRPC| G3
 
-<p>将里面的内容全部替换为：（换成其它源也可以）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye main non-free contrib`</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye main non-free contrib</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian-security/ bullseye-security main</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian-security/ bullseye-security main</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye-updates main non-free contrib</span><br><span class="line"></span><br><span class="line">deb http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.aliyun.com/debian/ bullseye-backports main non-free contrib</span><br></pre></td></tr></table></figure>
+    classDef center fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef room fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef agent fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
 
-<h3 id="二、去除企业版源并增加社区源"><a href="#二、去除企业版源并增加社区源" class="headerlink" title="二、去除企业版源并增加社区源"></a>二、去除企业版源并增加社区源</h3><p>在终端中输入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/apt/sources.list.d</span><br><span class="line">vi pve-enterprise.list</span><br></pre></td></tr></table></figure>
+    class Center center
+    class Room1,Room2,RoomN room
+    class S1,S2,S3 agent</pre>
 
-<p>注释掉：（增加#号）</p>
-<p>找到对应行，输入i，然后注释</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#deb https://enterprise.proxmox.com/debian/pve buster pve-enterprise</span><br></pre></td></tr></table></figure>
-
-<p>按ESC -&gt; :wq 退出</p>
-<p>接着：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">touch</span> pve-no-subscription.list</span><br><span class="line">vi pve-no-subscription.list</span><br></pre></td></tr></table></figure>
-
-<p>然后输入i -&gt;</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/proxmox/debian/pve bullseye pve-no-subscription</span><br></pre></td></tr></table></figure>
-
-<p>ESC -&gt; :wq 退出</p>
-<h3 id="三、清理、更新系统"><a href="#三、清理、更新系统" class="headerlink" title="三、清理、更新系统"></a>三、清理、更新系统</h3><p>使用下面命令清理系统冗余并更新软件包列表</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt clean </span><br><span class="line">apt autoclean </span><br><span class="line">apt autoremove --purge</span><br><span class="line">apt update</span><br></pre></td></tr></table></figure>
-
-<p>注释掉5.15内核，否则在全部更新的时候会更新5.15版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-mark hold pve-kernel-5.15</span><br></pre></td></tr></table></figure>
-
-<p>安装最新内核及更新系统：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install pve-kernel-6.2.11-1-pve -y</span><br><span class="line"><span class="comment">#截至当前发文，最新版本内核已经更新到6.2.11了，而我的是两天前安装的6.2.9</span></span><br><span class="line">apt dist-upgrade -y</span><br></pre></td></tr></table></figure>
-
-<p>安装&#x2F;更新Intel微码</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install intel-microcode -y</span><br></pre></td></tr></table></figure>
-
-<p>接着输入reboot命令重启系统等待微码更新和内核启动即可。</p>
-<p>重启后使用uname -a查看内核信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@pve:~# uname -a</span><br><span class="line">Linux pve 6.2.9-1-pve #1 SMP PREEMPT_DYNAMIC PVE 6.2.9-1 (2023-03-31T10:48Z) x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
-
-<h1 id="三、PVE虚拟机注意事项（对于第一版）"><a href="#三、PVE虚拟机注意事项（对于第一版）" class="headerlink" title="三、PVE虚拟机注意事项（对于第一版）"></a>三、PVE虚拟机注意事项（对于第一版）</h1><p>本段是根据个人所遇到的情况及相应的处理方案，不一定适用于每个人。</p>
-<p>由于我购置的康耐信N5105 r86s工控机是四网口的，可以通过单独为PVE准备一个WAN口解决PVE内无法上网的问题，还可以为此创建docker的macvlan网络。双网口可以参考双网口的文章。</p>
-<h2 id="个人网络情况"><a href="#个人网络情况" class="headerlink" title="个人网络情况"></a>个人网络情况</h2><p><img src="/images/1.png" class="lazyload" data-srcset="/images/1.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="image-20230506234046359"></p>
-<p>网口1 enp3s0：接上游网络设备(光猫拨号设备&#x2F;另一个网关) <em><strong>已创建桥接</strong></em>（相当于虚拟机的WAN）</p>
-<p>网口2 enp4s0：接路由器（AP及下游网络设备）<em><strong>已创建桥接</strong></em> （为虚拟化路由器系统（<a target="_blank" rel="noopener" href="https://github.com/miaoermua/CatWrt">CatWrt</a>）准备的LAN）</p>
-<p>网口3 enp5s0：接上游网络设备（用于做管理口和PVE上网的网口 相当于PVE的WAN）</p>
-<p>网口4 闲置</p>
-<h2 id="1-使用半虚拟化代替硬件直通"><a href="#1-使用半虚拟化代替硬件直通" class="headerlink" title="1.使用半虚拟化代替硬件直通"></a>1.使用半虚拟化代替硬件直通</h2><p>由于第一版N5105及其i225网卡的缺陷，直通将可能导致虚拟机内掉网卡，掉速和拔插网线死机，虚拟机外（Host）网口错乱等问题，故不宜选用此方案。</p>
-<p>但我们总得解决设备的网卡需求，因此，我们选用半虚拟化方案。</p>
-<p>首先，在数据中心-&gt;pve-&gt;系统-&gt;网络-&gt;创建-&gt;Linux Bridge</p>
-<p>我为我的网络创建了两个bridge，分别对应WAN(vmbr0,enp3s0)和LAN(vmbr1,enp4s0)</p>
-<p><img src="/images/2.png" class="lazyload" data-srcset="/images/2.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="image-20230506235614503"></p>
-<p>名称填自己喜欢的，桥接端口自己选择网口，<strong>勾选自动启动</strong></p>
-<p>注意：<strong>在创建完网络设备和设置网关等信息后需要点击应用配置以使设置生效</strong></p>
-<p>在虚拟机上，添加网络设备</p>
-<p><img src="/images/3.png" class="lazyload" data-srcset="/images/3.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="image-20230507000430199"></p>
-<p>选择自己刚刚添加的设备，模型选择 <strong>VirtIO(半虚拟化)</strong> <strong>这对稳定性非常重要！</strong></p>
-<p>防火墙选项：如果没有在PVE下管理流量的需求，可以不勾选。</p>
-<h2 id="2-为PVE配置一个单独的WAN口"><a href="#2-为PVE配置一个单独的WAN口" class="headerlink" title="2.为PVE配置一个单独的WAN口"></a>2.为PVE配置一个单独的WAN口</h2><p>为什么需要为PVE单独创建一个WAN口而不复用vmbr0呢？</p>
-<h3 id="问题1：PVE无法上网"><a href="#问题1：PVE无法上网" class="headerlink" title="问题1：PVE无法上网"></a>问题1：PVE无法上网</h3><p>如果在没有创建使用vmbr0的虚拟机前，当然是没有问题的，但当我们创建虚拟机后，就会遇到同网上一样的问题：</p>
-<blockquote>
-<p>PVE Host无法上网：网关，IP设置正确也无效</p>
-</blockquote>
-<p>如果PVE_WAN复用的是LAN（OpenWrt的LAN）</p>
-<blockquote>
-<p>有可能出现以下两种错误：</p>
-<p>1 Temporary failure in name resolution</p>
-<p>直接报dns的错误</p>
-<p>2 failed: Network is unreachable 或Destination Host Unreachable</p>
-</blockquote>
-<p>参考CSDN文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/IcarusAegis/article/details/125823095">Here</a></p>
-<p>如果PVE_WAN复用的是WAN（vmbr0）,参考下文。</p>
-<h3 id="问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）"><a href="#问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）" class="headerlink" title="问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）"></a>问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）</h3><blockquote>
-<p>vmbr0，vmbr1 对应enp3s0,enp4s0</p>
-</blockquote>
-<p>假如需要创建多个虚拟WAN，那么在如上（vmbr0，vmbr1 ，enp3s0,enp4s0）设备无法创建虚拟的VLAN设备以达到桥接创建虚拟网口的目的，包括docker的macvlan，当我们指定这些网络设备时会提示设备繁忙。</p>
-<p>比如</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network create -d macvlan --subnet=192.168.31.0/24 --gateway=192.168.31.1 -o parent=enp3s0 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>会提示设备繁忙无法创建（或者创建成功，但我们在添加容器时提示繁忙）。</p>
-<h3 id="创建WAN的方法："><a href="#创建WAN的方法：" class="headerlink" title="创建WAN的方法："></a>创建WAN的方法：</h3><p>有两种途径创建WAN。</p>
-<h4 id="1-使用PVE的Web图形化页面创建WAN口"><a href="#1-使用PVE的Web图形化页面创建WAN口" class="headerlink" title="1.使用PVE的Web图形化页面创建WAN口"></a>1.使用PVE的Web图形化页面创建WAN口</h4><p>在数据中心-&gt;pve-&gt;系统-&gt;网络，选择一个未桥接的接口，设置静态IP信息。（网关，IP地址，子网长度）</p>
-<p><img src="/images/4.png" class="lazyload" data-srcset="/images/4.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="image-20230507002048100"></p>
-<p>然后点击<strong>应用配置</strong></p>
-<h4 id="2-在终端中配置（推荐动手能力高的）"><a href="#2-在终端中配置（推荐动手能力高的）" class="headerlink" title="2.在终端中配置（推荐动手能力高的）"></a>2.在终端中配置（推荐动手能力高的）</h4><p>输入命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi /etc/network/interfaces</span><br></pre></td></tr></table></figure>
-
-<p>手动配置网卡信息。</p>
-<p>在enp5s0区段下修改如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">auto enp5s0</span><br><span class="line">iface enp5s0 inet static</span><br><span class="line">        address 192.168.31.41/24</span><br><span class="line">        gateway 192.168.31.1</span><br></pre></td></tr></table></figure>
-
-<p>重启网络</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">service networking restart</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置路由、DNS信息"><a href="#配置路由、DNS信息" class="headerlink" title="配置路由、DNS信息"></a>配置路由、DNS信息</h3><p>如果不执行这一步，你会发现PVE已经出现在了192.168.31.1&#x2F;24网段了，即已经连接上路由器了，但依然无法访问外网。这是因为路由信息异常导致的，需要单独设置默认网卡和默认路由。</p>
-<p>设置enp5s0为默认路由</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ip route add default via 192.168.100.1 dev enp5s50</span><br><span class="line"><span class="comment">#或</span></span><br><span class="line">route add default gw 192.168.31.1 enp5s0</span><br></pre></td></tr></table></figure>
-
-<p>查看配置结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip route show</span><br></pre></td></tr></table></figure>
-
-<p>如果出现</p>
-<blockquote>
-<p>default via 192.168.31.1 dev enp5s0 proto kernel onlink</p>
-<p>即成功</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@pve:~# ip route show</span><br><span class="line">default via 192.168.31.1 dev enp5s0 proto kernel onlink</span><br><span class="line">172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1</span><br><span class="line">192.168.31.0/24 dev enp5s0 proto kernel scope link src 192.168.31.41</span><br></pre></td></tr></table></figure></blockquote>
-<p>接着配置dns</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi /etc/resolv.conf</span><br></pre></td></tr></table></figure>
-
-<p>添加dns</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">search com</span><br><span class="line">nameserver 192.168.31.1</span><br><span class="line">nameserver 8.8.8.8</span><br></pre></td></tr></table></figure>
-
-<p>有关PVE的IPv6配置将在后续到来。</p>
-<p>测试：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@pve:~# curl ip.3322.net</span><br><span class="line">61.180.102.151</span><br></pre></td></tr></table></figure>
-
-<p>成功连接Internet。</p>
-<p>当然，此后，我们可以在enp5s0 直接创建macvlan网络，vlan设备了</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@pve:~# docker network create -d macvlan --subnet=192.168.31.0/24 --gateway=192.168.31.1 -o parent=enp5s0 dianxin</span><br><span class="line">0ebcd6c39b7e812665ba5176c088b715e196923fca1d3f75aef842dc2f1861d0</span><br><span class="line">root@pve:~# docker network ls</span><br><span class="line">NETWORK ID     NAME      DRIVER    SCOPE</span><br><span class="line">c1a286028953   bridge    bridge    local</span><br><span class="line">0ebcd6c39b7e   dianxin   macvlan   local</span><br><span class="line">1babb0e980ee   host      host      local</span><br><span class="line">ecb39f108081   none      null      local</span><br></pre></td></tr></table></figure>
-
-<p>End.</p>
+<p>中心管理(我们内部的运维平台)：作为大脑，维护全局IP地址池数据库，并内置动态&#x2F;静态IP分配引擎。所有分配决策均由中心服务做出。</p>
+<p>通信机制：通过双向流式gRPC连接，支持中心服务实时推送配置变更，同时各机房Agent可上报状态与请求。</p>
+<p>机房集群：每个机房内可部署多个DHCP Server Agent实例，形成高可用集群。所有Agent均以客户端身份与中心建立长连接。</p>
+<h2 id="需求核心策略"><a href="#需求核心策略" class="headerlink" title="需求核心策略"></a>需求核心策略</h2><p>在接到一个需求时，我们首先要想的是这个需求的目的是什么：很明显，各业务节点都需要从dhcp server获取IP地址用于上网(当前，<br>有的节点在系统上配置了静态ip，但绝大多数仍然需要动态分配，无论是mac-ip静态绑定还是从地址池中随机分配，都是为了让节点能够上网)。</p>
+<p>那很显然，系统要是崩了，节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p>
 
   </div>
   <!-- 原文链接/阅读更多：仅当page.link存在时显示 -->
@@ -3231,10 +3101,10 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateModified" datetime="2023-05-08T23:26:33+08:00">
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-08-09T17:00:38+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2023年5月8日</p>
+    <p>更新于：2026年8月9日</p>
   </a>
 </div>
 
@@ -3245,8 +3115,8 @@ document.addEventListener('DOMContentLoaded', function () {
   
   
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/PVE/" rel="nofollow"><i class="fa-solid fa-hashtag fa-fw" aria-hidden="true"></i><p>PVE</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/N5105/" rel="nofollow"><i class="fa-solid fa-hashtag fa-fw" aria-hidden="true"></i><p>N5105</p></a></div>
-  <span hidden itemprop="keywords">PVE N5105</span>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="nofollow"><i class="fa-solid fa-hashtag fa-fw" aria-hidden="true"></i><p>分布式系统</p></a></div>
+  <span hidden itemprop="keywords">分布式系统</span>
   
 
 
@@ -3260,8 +3130,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/&title=ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性 - Enjoy your life&summary=换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性
-康耐信N5105 0x0步进第一版i225-v3"
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
           
@@ -3273,8 +3145,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/&title=ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性 - Enjoy your life&summary=换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性
-康耐信N5105 0x0步进第一版i225-v3"
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
           
@@ -3286,8 +3160,10 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2023/05/07/ProxmoxVE-7-x-%E6%8D%A2%E6%BA%90%E5%8F%8A%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E4%BB%A5%E6%8F%90%E5%8D%87%E6%95%B4%E4%BD%93%E7%A8%B3%E5%AE%9A%E6%80%A7/&title=ProxmoxVE 7.x 换源及更新系统内核以提升IntelN5105机器的整体稳定性 - Enjoy your life&summary=换源加快PVE更新&#x2F;下载包速度，更新内核和Intel微码提升天坑N5105工控机跑PVE虚拟机的稳定性
-康耐信N5105 0x0步进第一版i225-v3"
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
+目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
+整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
           
           >
           
@@ -3321,15 +3197,10 @@ document.addEventListener('DOMContentLoaded', function () {
   
     <div class="prev-next">
       
-        <a class='prev' href='/2023/05/09/%E6%8E%A8%E8%8D%906%E4%B8%AA%E5%BC%80%E6%BA%90Vue%E6%A1%86%E6%9E%B6-%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BA%E5%87%BA%E7%BE%8E%E8%A7%82%E7%9A%84Web%E5%BA%94%E7%94%A8/'>
-          <p class='title'><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>推荐6个开源Vue框架-快速构建出美观的Web应用</p>
-          <p class='content'>现在的应用基本都是前后端分离，在国内，Vue相对来说更受欢迎一些，我们很多后端系统的前端都是Vue来开发的。那么Vue UI框架就显得尤为重要。Vue UI框架提供了一套丰富的用户界面组件及完整的前端UI解决方案，如按钮、表单、导航、布局等，使得开发者可以专注于业务逻辑开发，而不用从零构建这些常用的界面元素，帮助开发者更快速地构建高质量的用户界面，对于初学者，我们想要从0开始手撸显然是不现实的，在</p>
-        </a>
       
-      
-        <a class='next' href='/2023/05/02/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BF%81%E7%A7%BB/'>
-          <p class='title'>About me & My Blog<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></p>
-          <p class='content'>记录一次自己发文地点变更想说的话</p>
+        <a class='next' href='/2025/06/27/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AAnats%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%B3%BB%E7%BB%9F/'>
+          <p class='title'>设计一个nats消息队列负载均衡系统<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>试着回答一下这个有趣的消费-生产问题吧:  这是一个使用消息队列解耦多个生产者和多个消费者的系统。 生产者生产的消息是有分区的(按project_id分区),分区也会动态分配。 消费者需要竞争消费消息,每个消费者可以消费多个分区。 对于一个分区,最多有不超过1/n个消费者在消费。 生产者和消费者根据性能和数据量,会在kubernetes中进行动态的扩缩容。  消息需要尽可能的被均匀地分配到消费者上</p>
         </a>
       
     </div>
@@ -3414,7 +3285,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#N5105%E8%99%9A%E6%8B%9F%E5%8C%96%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">N5105虚拟化的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A1%AC%E4%BB%B6%E5%9C%A8%E4%B8%8D%E5%9C%A8%E5%A4%A9%E5%9D%91%E9%87%8C"><span class="toc-text">查看自己的硬件在不在天坑里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E6%BA%90"><span class="toc-text">换源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%9B%B4%E6%8D%A2%E9%98%BF%E9%87%8C%E4%BA%91%E7%9A%84%E6%BA%90"><span class="toc-text">一、更换阿里云的源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8E%BB%E9%99%A4%E4%BC%81%E4%B8%9A%E7%89%88%E6%BA%90%E5%B9%B6%E5%A2%9E%E5%8A%A0%E7%A4%BE%E5%8C%BA%E6%BA%90"><span class="toc-text">二、去除企业版源并增加社区源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B8%85%E7%90%86%E3%80%81%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F"><span class="toc-text">三、清理、更新系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%BB%9C%E6%83%85%E5%86%B5"><span class="toc-text">个人网络情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8%E5%8D%8A%E8%99%9A%E6%8B%9F%E5%8C%96%E4%BB%A3%E6%9B%BF%E7%A1%AC%E4%BB%B6%E7%9B%B4%E9%80%9A"><span class="toc-text">1.使用半虚拟化代替硬件直通</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BAPVE%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E5%8D%95%E7%8B%AC%E7%9A%84WAN%E5%8F%A3"><span class="toc-text">2.为PVE配置一个单独的WAN口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9APVE%E6%97%A0%E6%B3%95%E4%B8%8A%E7%BD%91"><span class="toc-text">问题1：PVE无法上网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982%EF%BC%9A%E6%97%A0%E6%B3%95%E5%9C%A8%E7%BD%91%E5%8D%A1%E4%B8%8A%E5%86%8D%E5%88%9B%E5%BB%BA%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%EF%BC%88vlan%EF%BC%8Cmacvlan%EF%BC%89"><span class="toc-text">问题2：无法在网卡上再创建桥接网络设备（vlan，macvlan）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAWAN%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-text">创建WAN的方法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8PVE%E7%9A%84Web%E5%9B%BE%E5%BD%A2%E5%8C%96%E9%A1%B5%E9%9D%A2%E5%88%9B%E5%BB%BAWAN%E5%8F%A3"><span class="toc-text">1.使用PVE的Web图形化页面创建WAN口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%AD%E9%85%8D%E7%BD%AE%EF%BC%88%E6%8E%A8%E8%8D%90%E5%8A%A8%E6%89%8B%E8%83%BD%E5%8A%9B%E9%AB%98%E7%9A%84%EF%BC%89"><span class="toc-text">2.在终端中配置（推荐动手能力高的）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1%E3%80%81DNS%E4%BF%A1%E6%81%AF"><span class="toc-text">配置路由、DNS信息</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E6%A0%B8%E5%BF%83%E7%AD%96%E7%95%A5"><span class="toc-text">需求核心策略</span></a></li></ol>
     </div>
   </section>
 
