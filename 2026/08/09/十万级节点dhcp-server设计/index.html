@@ -35,18 +35,18 @@
   <!-- 页面元数据 -->
   <title>十万级节点 DHCP Server 设计 - Enjoy your life</title>
   <meta name="keywords" content=", 分布式系统,AEnjoy,Hexo,Go,OpenWrt,PVE">
-  <meta desc name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
-在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要... - AEnjoy - Enjoy your life">
-  <meta name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，">
+  <meta desc name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+在这个量级，传统的单体架构已经无法满足... - AEnjoy - Enjoy your life">
+  <meta name="description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要">
 <meta property="og:type" content="article">
 <meta property="og:title" content="十万级节点 DHCP Server 设计">
 <meta property="og:url" content="https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Enjoy your life">
-<meta property="og:description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，">
+<meta property="og:description" content="最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png">
 <meta property="article:published_time" content="2026-08-09T08:42:26.000Z">
-<meta property="article:modified_time" content="2026-08-09T09:00:38.675Z">
+<meta property="article:modified_time" content="2026-08-09T09:09:12.200Z">
 <meta property="article:author" content="AEnjoy">
 <meta property="article:tag" content="分布式系统">
 <meta name="twitter:card" content="summary">
@@ -2573,7 +2573,7 @@ document.addEventListener('DOMContentLoaded', function () {
     root: "/",
     debug: "env",
     default: {"avatar":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/avatar/round/3442075.svg","link":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/link/8f277b4ee0ecd.svg","cover":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/cover/76b86c0226ffd.svg","image":"https://unpkg.com/volantis-static@0.0.1761982841160/media/placeholder/image/2659360.svg","topic":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png","project":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png","banner":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg","loading":"https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd","image_onerror":"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E"},
-    lastupdate: new Date(1786266056261),
+    lastupdate: new Date(1786266561950),
     scroll_behavior: "smooth",
     cdn: {
       jquery: "https://unpkg.com/jquery@3.7.1/dist/jquery.min.js",
@@ -2641,7 +2641,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/","name":"十万级节点 DHCP Server 设计"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"十万级节点 DHCP Server 设计","description":"最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。\n在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。\n目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。\n整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/","wordCount":320,"datePublished":"2026-08-09T08:42:26.000Z","dateModified":"2026-08-09T09:00:38.675Z","keywords":"分布式系统","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+    <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","sameAs":["https://github.com/volantis-x"],"description":"记录技术、折腾与生活。"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://www.a-enjoy.top/","name":"Enjoy your life"}},{"@type":"ListItem","position":3,"item":{"@id":"https://www.a-enjoy.top/2026/08/09/十万级节点dhcp-server设计/","name":"十万级节点 DHCP Server 设计"}}]},{"@context":"http://schema.org","@type":"WebSite","name":"Enjoy your life","url":"https://www.a-enjoy.top/","keywords":["AEnjoy","Hexo","Go","OpenWrt","PVE"],"description":"记录技术、折腾与生活。","author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/","description":"记录技术、折腾与生活。"},"publisher":{"@type":"Organization","name":"Enjoy your life","url":"https://www.a-enjoy.top/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://www.a-enjoy.top?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"http://schema.org","@type":"BlogPosting","headline":"十万级节点 DHCP Server 设计","description":"最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。\n在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。\n目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。\n整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"},"author":{"@type":"Person","name":"AEnjoy","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://www.a-enjoy.top/"},"publisher":{"@type":"Organization","name":"Enjoy your life","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/","wordCount":363,"datePublished":"2026-08-09T08:42:26.000Z","dateModified":"2026-08-09T09:09:12.200Z","keywords":"分布式系统","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1761982841160/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
   <!-- import head_end begin -->
   <!-- import head_end end -->
   <!-- Custom Files headEnd begin-->
@@ -3027,7 +3027,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <div id="layoutHelper-page-plugins"></div>
   <!-- 文章核心内容区 -->
   <div id="post-body" itemprop="articleBody">
-    <p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
+    <p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
 <p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p>
 <p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p>
 <p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p>
@@ -3073,7 +3073,9 @@ document.addEventListener('DOMContentLoaded', function () {
 <p>通信机制：通过双向流式gRPC连接，支持中心服务实时推送配置变更，同时各机房Agent可上报状态与请求。</p>
 <p>机房集群：每个机房内可部署多个DHCP Server Agent实例，形成高可用集群。所有Agent均以客户端身份与中心建立长连接。</p>
 <h2 id="需求核心策略"><a href="#需求核心策略" class="headerlink" title="需求核心策略"></a>需求核心策略</h2><p>在接到一个需求时，我们首先要想的是这个需求的目的是什么：很明显，各业务节点都需要从dhcp server获取IP地址用于上网(当前，<br>有的节点在系统上配置了静态ip，但绝大多数仍然需要动态分配，无论是mac-ip静态绑定还是从地址池中随机分配，都是为了让节点能够上网)。</p>
-<p>那很显然，系统要是崩了，节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p>
+<p>那很显然，系统要是崩了（含超时、故障等），节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p>
+<p>如果ip分配冲突了，那么节点受路由，arp策略自然也无法上网了，这就是我们要解决的第二个核心问题 -&gt; 一致性问题。</p>
+<p>性能在这个系统里不是主要的考虑点，毕竟请求是很轻量的，对请求响应耗时要求也不高。</p>
 
   </div>
   <!-- 原文链接/阅读更多：仅当page.link存在时显示 -->
@@ -3101,7 +3103,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-08-09T17:00:38+08:00">
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-08-09T17:09:12+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2026年8月9日</p>
@@ -3130,7 +3132,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
@@ -3145,7 +3147,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"
@@ -3160,7 +3162,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/&title=十万级节点 DHCP Server 设计 - Enjoy your life&summary=最近业务方提出了一个需求：在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。
 在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。
 目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。
 整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。"

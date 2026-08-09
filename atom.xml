@@ -10,26 +10,26 @@
   <rights>All rights reserved 2026, AEnjoy</rights>
   <subtitle>AEnjoy's Blog</subtitle>
   <title>Enjoy your life</title>
-  <updated>2026-08-09T09:00:38.675Z</updated>
+  <updated>2026-08-09T09:09:12.200Z</updated>
   <entry>
     <author>
       <name>AEnjoy</name>
     </author>
     <category term="分布式系统" scheme="https://www.a-enjoy.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
     <content>
-      <![CDATA[<p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p><p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p><p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p><p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p><span id="more"></span><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><pre class="mermaid">graph TB    subgraph Center[中心管理服务]        direction TB        A[统一IP地址池管理] --> B[动态/静态IP分配引擎]        B --> C[gRPC服务端]        D[(IP地址池数据库)]        A -.-> D    end    subgraph Room1[机房A]        direction LR        S1[DHCP Server Agent 1] --> G1[gRPC客户端]    end    subgraph Room2[机房B]        direction LR        S2[DHCP Server Agent 2] --> G2[gRPC客户端]    end    subgraph RoomN[机房N]        direction LR        S3[DHCP Server Agent N] --> G3[gRPC客户端]    end    C <-->|双向流式gRPC| G1    C <-->|双向流式gRPC| G2    C <-->|双向流式gRPC| G3    classDef center fill:#e1f5fe,stroke:#01579b,stroke-width:2px    classDef room fill:#f3e5f5,stroke:#4a148c,stroke-width:2px    classDef agent fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px    class Center center    class Room1,Room2,RoomN room    class S1,S2,S3 agent</pre><p>中心管理(我们内部的运维平台)：作为大脑，维护全局IP地址池数据库，并内置动态&#x2F;静态IP分配引擎。所有分配决策均由中心服务做出。</p><p>通信机制：通过双向流式gRPC连接，支持中心服务实时推送配置变更，同时各机房Agent可上报状态与请求。</p><p>机房集群：每个机房内可部署多个DHCP Server Agent实例，形成高可用集群。所有Agent均以客户端身份与中心建立长连接。</p><h2 id="需求核心策略"><a href="#需求核心策略" class="headerlink" title="需求核心策略"></a>需求核心策略</h2><p>在接到一个需求时，我们首先要想的是这个需求的目的是什么：很明显，各业务节点都需要从dhcp server获取IP地址用于上网(当前，<br>有的节点在系统上配置了静态ip，但绝大多数仍然需要动态分配，无论是mac-ip静态绑定还是从地址池中随机分配，都是为了让节点能够上网)。</p><p>那很显然，系统要是崩了，节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p>]]>
+      <![CDATA[<p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p><p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p><p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p><p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p><span id="more"></span><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><pre class="mermaid">graph TB    subgraph Center[中心管理服务]        direction TB        A[统一IP地址池管理] --> B[动态/静态IP分配引擎]        B --> C[gRPC服务端]        D[(IP地址池数据库)]        A -.-> D    end    subgraph Room1[机房A]        direction LR        S1[DHCP Server Agent 1] --> G1[gRPC客户端]    end    subgraph Room2[机房B]        direction LR        S2[DHCP Server Agent 2] --> G2[gRPC客户端]    end    subgraph RoomN[机房N]        direction LR        S3[DHCP Server Agent N] --> G3[gRPC客户端]    end    C <-->|双向流式gRPC| G1    C <-->|双向流式gRPC| G2    C <-->|双向流式gRPC| G3    classDef center fill:#e1f5fe,stroke:#01579b,stroke-width:2px    classDef room fill:#f3e5f5,stroke:#4a148c,stroke-width:2px    classDef agent fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px    class Center center    class Room1,Room2,RoomN room    class S1,S2,S3 agent</pre><p>中心管理(我们内部的运维平台)：作为大脑，维护全局IP地址池数据库，并内置动态&#x2F;静态IP分配引擎。所有分配决策均由中心服务做出。</p><p>通信机制：通过双向流式gRPC连接，支持中心服务实时推送配置变更，同时各机房Agent可上报状态与请求。</p><p>机房集群：每个机房内可部署多个DHCP Server Agent实例，形成高可用集群。所有Agent均以客户端身份与中心建立长连接。</p><h2 id="需求核心策略"><a href="#需求核心策略" class="headerlink" title="需求核心策略"></a>需求核心策略</h2><p>在接到一个需求时，我们首先要想的是这个需求的目的是什么：很明显，各业务节点都需要从dhcp server获取IP地址用于上网(当前，<br>有的节点在系统上配置了静态ip，但绝大多数仍然需要动态分配，无论是mac-ip静态绑定还是从地址池中随机分配，都是为了让节点能够上网)。</p><p>那很显然，系统要是崩了（含超时、故障等），节点就无法上网了，这就是我们要解决的核心问题 -&gt; 稳定性问题。</p><p>如果ip分配冲突了，那么节点受路由，arp策略自然也无法上网了，这就是我们要解决的第二个核心问题 -&gt; 一致性问题。</p><p>性能在这个系统里不是主要的考虑点，毕竟请求是很轻量的，对请求响应耗时要求也不高。</p>]]>
     </content>
     <id>https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/</id>
     <link href="https://www.a-enjoy.top/2026/08/09/%E5%8D%81%E4%B8%87%E7%BA%A7%E8%8A%82%E7%82%B9dhcp-server%E8%AE%BE%E8%AE%A1/"/>
     <published>2026-08-09T08:42:26.000Z</published>
     <summary>
-      <![CDATA[<p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
+      <![CDATA[<p>最近业务方提出了一个需求：<br>在一个大型数据中心网络中，需要设计一个能够支持十万级节点的DHCP服务器系统，同时还需要作为PXEServer用于提供PXE启动服务（包括：裸金属装机、无盘启动）。<br>这个系统需要具备高可用性、可扩展性和负载均衡能力，以确保在高并发环境下能够稳定运行。</p>
 <p>在这个量级，传统的单体架构已经无法满足需求，因此需要采用分布式架构来实现dhcp服务的可扩展性和高可用性。<br>同时，根据业务需要，我们有一个中央配置中心用于管理DHCP服务器的配置和策略，以便在需要时可以动态调整，DhcpServer负责执行具体的DHCP分配和管理任务。</p>
 <p>目前，有两类ip分配：纯动态：在地址池中随机分配；纯静态：根据mac地址分配固定ip。</p>
 <p>整体系统实现思路很简单，但要保证一致性还是有一定难度的，下面我将详细描述这个系统的设计思路。</p>]]>
     </summary>
     <title>十万级节点 DHCP Server 设计</title>
-    <updated>2026-08-09T09:00:38.675Z</updated>
+    <updated>2026-08-09T09:09:12.200Z</updated>
   </entry>
   <entry>
     <author>
